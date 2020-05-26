@@ -7,3 +7,11 @@
 #greeting-container {
   margin-top: 20px;
 }
+
+#images {
+    text-align: center;
+}
+#image_label {
+    display: inline-block;
+    margin-left: 40px;
+}
