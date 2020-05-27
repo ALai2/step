@@ -6,84 +6,149 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
-  <body>
+  <body id="stripes">
     <div id="content">
-      <h1>Alisa's Portfolio</h1>
-      <p align="center">
-        <img src="/images/ALai_square.jpg" width=300 alt="Alisa Profile Pic">
-        <br/><strong>This is me!</strong>
-      </p>
-      <h2>About Me</h2>
-      <p>I am a student studying Computer Science at Cornell University.
-          I started getting interested in computer science in my freshman year of high school, when I took an introduction to cs class.<br/>
-          
-          I like making interesting side projects and taking pictures of the progress that I make when my friends show me how to play Minecraft.<br/>
-          
-          I started Taekwondo in the second semester of freshman year and I am currently a blue belt.
-          What I like the most about Taekwondo is the people I meet. The members of Cornell's Taekwondo Team are all incredible people, 
-          not just as Taekwondo practitioners but also as people who support and cheer one another.<br/>
-          
-          I like cats.<br/>
-          My favorite books to read are the Harry Potter series.
-        </p>
-      <h2>Interesting Projects</h2>
-      <h2>Links</h2>
-      <p>Github:</p>
-      <p>LinkedIn:</p>
-      <h2>Gallery</h2>
-      
-      <div id="images">
-        
-        <p><strong>My Taekwondo Team</strong></p>
-        <div id="image_label">
-            <a href="/images/TKDCornellTeam.jpg">
-                <img src="/images/TKDCornellTeam.jpg" width=250 alt="Cornell TKD Team Picture">
-            </a>
-            <p>This is my Taekwondo team!</p>
-        </div>
-        <div id="image_label">
-            <a href="/images/BlueBeltGroup.jpeg">
-                <img src="/images/BlueBeltGroup.jpeg" width=250 alt="Cornell Blue Belts Picture">
-            </a>
-            <p>These are my fellow blue belts!</p>
-        </div>
-        
-        <p><strong>Other Pictures</strong></p>
-        <div id="image_label">
-            <a href="/images/WizardsUniteProfile.png">
-                <img src="/images/WizardsUniteProfile.png" width=250 alt="My Wizards Unite Profile">
-            </a>
-            <p>I am a huge Harry Potter fan!</p>
-        </div>
-        <div id="image_label">
-            <a href="/images/MangoMangoSweets.jpg">
-                <img src="/images/MangoMangoSweets.jpg" width=250 alt="Mango Mango dessert">
-            </a>
-            <p>Yum! I have a sweet tooth.</p>
-        </div>
-        <div id="image_label">
-            <a href="/images/MCStarterHouse.jpg">
-                <img src="/images/MCStarterHouse.jpg" width=250 alt="My first Minecraft starter house">
-            </a>
-            <p>My first starter house in Minecraft.</p>
+        <h1 id="title"><strong>Alisa's Portfolio</strong></h1>
+
+        <div id="images">
+            <div id="image_label" align="center">
+                <a href="/images/ALai_square.jpg">
+                    <img src="/images/ALai_square.jpg" id="section" style="width:300px;" alt="Alisa Profile Pic">
+                </a>
+            </div>
         </div>
 
-      </div>
+      <div id="section">
+        <h2>About Me</h2>
+        <p> I am a rising junior studying Computer Science at Cornell University.
+            I started getting interested in computer science in my freshman year of high school, when I took an introduction to cs class. 
+            What I like the most about programming is the creativity that goes along with it. There are no limits to what can be accomplished using code and it feels so satisfying when looking at and using the final product.
+            <br/><br/>
+            
+            I do a mix of things in my spare time. I typically watch anime or read Harry Potter fanfiction on fanfiction.net. 
+            I also do a bit of exercising like running around the neighborhood or do Taekwondo poomsae forms. 
+            I started Taekwondo in the second semester of freshman year and I am currently a blue belt.
+            What I like the most about Taekwondo is the people I meet. The members of Cornell's Taekwondo Team are all incredible people, 
+            not just as Taekwondo practitioners but also as people who support and cheer one another. 
+            <br/><br/>
+            
+            Sometimes I try new things, for example just recently I have started to play Minecraft. Well, at the very least I know that I need to punch the trees to get wood and that creepers blow up when I get close to them. 
+            Some other activities I like to do are side projects. One of my favorite projects is the one I made in senior year of high school. 
+            I not only created my own 3D character with animations using Blender, but I also programmed that character with third-person player controls in Unity 3D. 
+            An interesting fact about that project was that I was able to use it as my passion project for English class as an example of different types of communication.
+            <br/><br/>
+            
+            I really like the Harry Potter series, they are my favorite books. If the Sorting Hat were to place me into a Hogwarts House it would be Hufflepuff. 
+            While I could consider myself to be ambitious, I am in general too honest to be a Slytherin, which is seconded by my sister's claims that I would make a terrible Slytherin.
+            I am a bit too cautious to be a Gryffindor, but I have made it one of my goals to be more open and take initiative when trying new activites.
+            I do believe that I am currently succeeding with that goal as my college friends claim that I am less quiet and a much better communicator than I had been in freshman year.
+            Ravenclaw is a close second after Hufflepuff because of my curiosity and love of learning new things. But I would consider myself more hard-working than clever.
+            <br/><br/>
+            
+            The Patronus that I got from one of the Pottermore quizzes is the Tortouiseshell Cat, which is cool because I really like cats. 
+            Unfortunately I do not have any pets but I do have a stuffed animal substitute named Regulus. Regulus looks like a cat but she's actually a toy dog. 
+            Just like a cat I like eating fish, especially salmon and eel. If the food comes in the form of sushi, that's even better.
 
-      <h3>Why These Pictures?</h3>
-      <h2>My Hidden Talent</h2>
-      <p>Click here to get a random message:</p>
-      <button onclick="addRandomGreeting()">Hello</button>
-      <div id="greeting-container"></div>
+            </p>
+        </div>
+        <div id="section">
+            <h2>Interesting Projects</h2>
+            <p>
+                Besides the Unity project that I mentioned above, another project that I did that I find particularly interesting is Zing. 
+                Zing is a project that I started with two people over the summer my freshman year when I did an internship at Life Changing Labs in Ithaca. 
+                Life Changing Labs is an entrepreneurship program which matches founders with interns that they work with to build their startup idea. 
+                Zing is a project that brings isolated students on campus together and during this time of quarantine we actually made a variant of Zing called 
+                Quarantine Buddy which pairs users to do a Zoom call together so they don't have to feel as isolated when they are at home. A special 
+                shoutout to my teammate Sam who got the opportunity to be on ABC news with Kelly and Ryan to talk about Quarantine Buddy.
+                <br/><br/>
+
+                I also worked on a bomb defusal game with the C programming language on a single FRDM MK64F board with my friend. 
+                We used the board's built-in accelerometer to determine orientation values for displaying the different sections of the game. 
+                Each section had a different mini-game to play: Morse code translation, simon says, reaction time, and a last stand game which depended on the results of the other 3 mini-games. 
+                The game uses the LED to display a randomly selected sequence of colors based on the rules of each mini-game and the user uses the pushbuttons to play the game.
+                </p>
+        </div>
+
+        <div id="section">
+            <h2>Gallery</h2>
+            
+            <div id="images">
+                
+                <p><strong>My Taekwondo Team</strong></p>
+                <div id="image_label">
+                    <a href="/images/TKDCornellTeam.jpg">
+                        <img src="/images/TKDCornellTeam.jpg" width=250 alt="Cornell TKD Team Picture">
+                    </a>
+                    <p>This is my Taekwondo team!</p>
+                </div>
+                <div id="image_label">
+                    <a href="/images/BlueBeltGroup.jpeg">
+                        <img src="/images/BlueBeltGroup.jpeg" width=250 alt="Cornell Blue Belts Picture">
+                    </a>
+                    <p>These are my fellow blue belts!</p>
+                </div>
+                
+                <p><strong>Fun Memories</strong></p>
+                <div id="image_label">
+                    <a href="/images/WizardsUniteProfile.png">
+                        <img src="/images/WizardsUniteProfile.png" width=250 alt="My Wizards Unite Profile">
+                    </a>
+                    <p>I am a huge Harry Potter fan!</p>
+                </div>
+                <div id="image_label">
+                    <a href="/images/MangoMangoSweets.jpg">
+                        <img src="/images/MangoMangoSweets.jpg" width=250 alt="Mango Mango dessert">
+                    </a>
+                    <p>Yum! I have a sweet tooth.</p>
+                </div>
+                <div id="image_label">
+                    <a href="/images/MCStarterHouse.jpg">
+                        <img src="/images/MCStarterHouse.jpg" width=250 alt="My first Minecraft starter house">
+                    </a>
+                    <p>My first starter house in Minecraft.</p>
+                </div>
+
+            </div>
+
+            <h3>Why These Pictures?</h3>
+                <p>
+                    I enjoy photographing and keeping pictures of memorable moments. I have pictures of the Taekwondo team that I am currently on 
+                    as well as moments that I have with my college friends. The base of the photo with the Harry Potter references was taken by a good friend of mine, Andrea, who 
+                    is an English major. I took the dessert photo at a restaurant called Mango Mango that recently opened in Ithaca Collegetown. 
+                    I went there with another friend named Lily because we wanted to eat dessert after watching the movie JoJo Rabbit at Cornell Cinema.
+                    The Minecraft photo was taken very recently, over Memorial weekend. This was my first time playing Minecraft and I didn't know what to do, 
+                    so I texted Andrea for help because she knew how to play and she explained to me what I needed to do to get started. 
+                    Surprisingly, I haven't had my first death yet, although the first skeleton that I encountered almost accomplished that. 
+                    It was nice that I got to do something with Andrea even though we are both stuck at home so I took a picture of the starter house to show her what I created using her advice.
+                    <br/><br/>
+
+                    Sometimes I do take pictures of stuff other than my life such as nature. Examples are animals and beautiful landscapes such as Ithaca Falls and sunsets. 
+                    I screenshot interesting quotes that I read on Instagram and interesting posts that I read on Facebook.
+                </p>
+        </div>
+
+        <div id="section" style="display:flex;">
+            <div style="padding-right: 25px; margin-right: 25px; border-right: 5px solid orange;">
+                <h2>Links</h2>
+                <a href="https://github.com/ALai2"><p>Github</p></a>
+                <a href="https://www.linkedin.com/in/alai2"><p>LinkedIn</p></a>
+
+            </div>
+
+            <div>
+                <h2>Fact Hat</h2>
+                <p>Random Fact &#8594; <span id="fact-container">???</span></p>
+                <button id="fun_button" onclick="addRandomFact()">Click Me!</button>
+            </div>
+
+        </div>
+
     </div>
   </body>
 </html>
 
-<!--
-Add a couple paragraphs explaining your background and what makes you you.
+<!-- 
 Add a list of projects you've worked on.
-Add a link to your LinkedIn and GitHub profiles.
-Add images! Create a gallery of your favorite places, or selfies, or pictures of your pets.
 Add a couple paragraphs explaining what you enjoy photographing.
 Add some blog posts explaining one of your hidden talents.
 -->
