@@ -1,4 +1,4 @@
-#stripes {
+#hufflepuff_stripes {
     background: repeating-linear-gradient(
         45deg,
         gold,
@@ -8,10 +8,21 @@
     );
 }
 
+#ravenclaw_stripes {
+    background: repeating-linear-gradient(
+        45deg,
+        rgb(52, 190, 236),
+        rgb(52, 190, 236) 100px,
+        rgba(143, 66, 22, 0.795) 100px,
+        rgba(143, 66, 22, 0.795) 200px
+    );
+}
+
 #title {
     font-size: 60px; 
-    color:white;
-    text-shadow:-2px 0 orange, 0 2px orange, 2px 0 orange, 0 -2px orange;
+    font-family: cursive;
+    color: white;
+    text-shadow: -2px 0 orange, 0 2px orange, 2px 0 orange, 0 -2px orange;
 }
 
 #content {
@@ -19,6 +30,10 @@
   margin-right: auto;
   width: 800px;
 } 
+
+h2 {
+    font-family: cursive;
+}
 
 #fact-container {
   margin-top: auto;
@@ -31,6 +46,7 @@
 #image_label {
     display: inline-block;
     margin-left: 40px;
+    font-family: 'Courier New', Courier, monospace;
 }
 
 #section {
@@ -45,4 +61,15 @@
 #fun_button {
     border-radius: 10px;
     background: cyan;
+    font-family: 'Courier New', Courier, monospace;
+    padding: 3px 7px;
+}
+
+#page_button {
+    border-radius: 10px;
+    background: cyan;
+    margin-bottom: 20px;
+    padding: 15px 32px;
+    border: 5px solid orange;
+    font-family: 'Courier New', Courier, monospace;
 }
