@@ -26,19 +26,19 @@ import java.util.ArrayList;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private ArrayList<String> list;
+  private ArrayList<String> commentList;
 
   @Override
   public void init() {
-    list = new ArrayList<>();
-    list.add("Hello Alisa!");
-    list.add("Hola");
-    list.add("How are you?");
+    commentList = new ArrayList<>();
+    commentList.add("Hello Alisa!");
+    commentList.add("Hola");
+    commentList.add("How are you?");
   }
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String json = convertToJson(list);
+    String json = convertToJson(commentList);
 
     response.setContentType("application/json;");
     response.getWriter().println(json);
