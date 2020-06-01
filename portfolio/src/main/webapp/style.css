@@ -1,28 +1,28 @@
 #hufflepuff_stripes {
-    background: repeating-linear-gradient(
-        45deg,
-        gold,
-        gold 100px,
-        black 100px,
-        black 200px
-    );
+  background: repeating-linear-gradient(
+    45deg,
+    gold,
+    gold 100px,
+    black 100px,
+    black 200px
+  );
 }
 
 #ravenclaw_stripes {
-    background: repeating-linear-gradient(
-        45deg,
-        rgb(52, 190, 236),
-        rgb(52, 190, 236) 100px,
-        rgba(143, 66, 22, 0.795) 100px,
-        rgba(143, 66, 22, 0.795) 200px
-    );
+  background: repeating-linear-gradient(
+    45deg,
+    rgb(52, 190, 236),
+    rgb(52, 190, 236) 100px,
+    rgba(143, 66, 22, 0.795) 100px,
+    rgba(143, 66, 22, 0.795) 200px
+  );
 }
 
 #title {
-    font-size: 60px; 
-    font-family: cursive;
-    color: white;
-    text-shadow: -2px 0 orange, 0 2px orange, 2px 0 orange, 0 -2px orange;
+  font-size: 60px; 
+  font-family: cursive;
+  color: white;
+  text-shadow: -2px 0 orange, 0 2px orange, 2px 0 orange, 0 -2px orange;
 }
 
 #content {
@@ -32,7 +32,7 @@
 } 
 
 h2 {
-    font-family: cursive;
+  font-family: cursive;
 }
 
 #fact-container {
@@ -41,35 +41,35 @@ h2 {
 }
 
 #images {
-    text-align: center;
+  text-align: center;
 }
 #image_label {
-    display: inline-block;
-    margin-left: 40px;
-    font-family: 'Courier New', Courier, monospace;
+  display: inline-block;
+  margin-left: 40px;
+  font-family: 'Courier New', Courier, monospace;
 }
 
 #section {
-    background: white;
-    padding: 25px 25px 25px 25px;
-    border-radius: 15px;
-    margin-top: 25px;
-    margin-bottom: 25px;
-    border: 5px solid orange;
+  background: white;
+  padding: 25px 25px 25px 25px;
+  border-radius: 15px;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  border: 5px solid orange;
 }
 
 #fun_button {
-    border-radius: 10px;
-    background: cyan;
-    font-family: 'Courier New', Courier, monospace;
-    padding: 3px 7px;
+  border-radius: 10px;
+  background: cyan;
+  font-family: 'Courier New', Courier, monospace;
+  padding: 3px 7px;
 }
 
 #page_button {
-    border-radius: 10px;
-    background: cyan;
-    margin-bottom: 20px;
-    padding: 15px 32px;
-    border: 5px solid orange;
-    font-family: 'Courier New', Courier, monospace;
+  border-radius: 10px;
+  background: cyan;
+  margin-bottom: 20px;
+  padding: 15px 32px;
+  border: 5px solid orange;
+  font-family: 'Courier New', Courier, monospace;
 }
