@@ -37,10 +37,7 @@ function getComments() {
   fetch('/data').then(response => response.json()).then((comments) => {
     const listElement = document.getElementById('comments');
     listElement.innerHTML = "";
-    
-    for (i = 0; i < comments.length; i++) {
-      listElement.appendChild(createListElement(comments[i]));
-    }
+    comments.forEach(comment => listElement.appendChild(createListElement(comment)));
   });
 }
 
