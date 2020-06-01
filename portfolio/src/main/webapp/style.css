@@ -25,7 +25,7 @@
   text-shadow: -2px 0 orange, 0 2px orange, 2px 0 orange, 0 -2px orange;
 }
 
-#content {
+.content {
   margin-left: auto;
   margin-right: auto;
   width: 800px;
@@ -40,10 +40,11 @@ h2 {
   margin-bottom: auto;
 }
 
-#images {
+.images {
   text-align: center;
 }
-#image-label {
+
+.image-label {
   display: inline-block;
   margin-left: 40px;
   font-family: 'Courier New', Courier, monospace;
@@ -63,7 +64,7 @@ img {
   border: 5px solid orange;
 }
 
-#section {
+.section {
   background: white;
   padding: 25px 25px 25px 25px;
   border-radius: 15px;
@@ -73,12 +74,6 @@ img {
 }
 
 #bottom-section {
-  background: white;
-  padding: 25px 25px 25px 25px;
-  border-radius: 15px;
-  margin-top: 25px;
-  margin-bottom: 25px;
-  border: 5px solid orange;
   display:flex;
 }
 
@@ -95,7 +90,7 @@ img {
   padding: 3px 7px;
 }
 
-#page-button {
+.page-button {
   border-radius: 10px;
   background: cyan;
   margin-bottom: 20px;
