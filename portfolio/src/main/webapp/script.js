@@ -34,7 +34,21 @@ function addRandomFact() {
  * Fetches a random message from java servlet and places it into message-container
  */
 function getRandomMessage() {
-  fetch('/data').then(response => response.text()).then((quote) => {
-    document.getElementById('message-container').innerText = quote;
+  fetch('/data').then(response => response.json()).then((message) => {
+    const listElement = document.getElementById('message-container');
+    listElement.innerHTML = "";
+    
+    for (i = 0; i < message.length; i++) {
+        listElement.appendChild(
+        createListElement(message[i]));
+    }
+    
   });
+}
+
+/** Creates an <li> element containing text. */
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
 }
