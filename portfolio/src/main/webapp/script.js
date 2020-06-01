@@ -38,9 +38,7 @@ function getRandomMessage() {
     const listElement = document.getElementById('message-container');
     listElement.innerHTML = "";
     
-    for (i = 0; i < message.length; i++) {
-      listElement.appendChild(createListElement(message[i]));
-    }
+    message.forEach(element => listElement.appendChild(createListElement(element)));
     
   });
 }
