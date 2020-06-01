@@ -26,14 +26,11 @@ import java.util.ArrayList;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private ArrayList<String> commentList;
+  private ArrayList<ArrayList<String>> commentList;
 
   @Override
   public void init() {
-    commentList = new ArrayList<>();
-    commentList.add("Hello Alisa!");
-    commentList.add("Hola");
-    commentList.add("How are you?");
+    commentList = new ArrayList<ArrayList<String>>();
   }
   
   @Override
@@ -52,5 +49,21 @@ public class DataServlet extends HttpServlet {
     Gson gson = new Gson();
     String json = gson.toJson(list);
     return json;
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // Get the input from the form.
+    String name = request.getParameter("name-input");
+    String comment = request.getParameter("comment-input");
+    
+    ArrayList<String> tmp = new ArrayList<>();
+    tmp.add(name);
+    tmp.add(comment);
+
+    commentList.add(tmp);
+
+    // Redirect back to the Comment page.
+    response.sendRedirect("/comments.html");
   }
 }

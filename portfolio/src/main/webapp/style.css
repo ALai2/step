@@ -18,6 +18,16 @@
     );
 }
 
+#gryffindor-stripes {
+  background: repeating-linear-gradient(
+    45deg,
+    rgb(199, 29, 29),
+    rgb(199, 29, 29) 100px,
+    gold 100px,
+    gold 200px
+  );
+}
+
 #title {
     font-size: 60px; 
     font-family: cursive;
