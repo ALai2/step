@@ -19,9 +19,9 @@
 }
 
 #title {
-  font-size: 60px; 
-  font-family: cursive;
   color: white;
+  font-family: cursive;
+  font-size: 60px; 
   text-shadow: -2px 0 orange, 0 2px orange, 2px 0 orange, 0 -2px orange;
 }
 
@@ -36,8 +36,8 @@ h2 {
 }
 
 #fact-container {
-  margin-top: auto;
   margin-bottom: auto;
+  margin-top: auto;
 }
 
 .images {
@@ -46,8 +46,8 @@ h2 {
 
 .image-label {
   display: inline-block;
-  margin-left: 40px;
   font-family: 'Courier New', Courier, monospace;
+  margin-left: 40px;
 }
 
 img {
@@ -56,21 +56,21 @@ img {
 
 #profile-image {
   background: cyan;
-  width: 300px;
-  padding: 25px 25px 25px 25px;
-  border-radius: 15px;
-  margin-top: 25px;
-  margin-bottom: 25px;
   border: 5px solid orange;
+  border-radius: 15px;
+  margin-bottom: 25px;
+  margin-top: 25px;
+  padding: 25px 25px 25px 25px;
+  width: 300px;
 }
 
 .section {
   background: white;
-  padding: 25px 25px 25px 25px;
+  border: 5px solid orange;
   border-radius: 15px;
   margin-top: 25px;
   margin-bottom: 25px;
-  border: 5px solid orange;
+  padding: 25px 25px 25px 25px;
 }
 
 #bottom-section {
@@ -78,23 +78,23 @@ img {
 }
 
 #link-section {
-  padding-right: 25px;
-  margin-right: 25px;
   border-right: 5px solid orange;
+  margin-right: 25px;
+  padding-right: 25px;
 }
 
 #fun-button {
-  border-radius: 10px;
   background: cyan;
+  border-radius: 10px;
   font-family: 'Courier New', Courier, monospace;
   padding: 3px 7px;
 }
 
 .page-button {
-  border-radius: 10px;
   background: cyan;
+  border: 5px solid orange;
+  border-radius: 10px;
+  font-family: 'Courier New', Courier, monospace;
   margin-bottom: 20px;
   padding: 15px 32px;
-  border: 5px solid orange;
-  font-family: 'Courier New', Courier, monospace;
 }
