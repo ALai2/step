@@ -30,6 +30,9 @@ function addRandomFact() {
   factContainer.innerText = fact; 
 }
 
+/**
+ * Fetches a random message from java servlet and places it into message-container
+ */
 function getRandomMessage() {
   fetch('/data').then(response => response.text()).then((quote) => {
     document.getElementById('message-container').innerText = quote;
