@@ -39,8 +39,7 @@ function getRandomMessage() {
     listElement.innerHTML = "";
     
     for (i = 0; i < message.length; i++) {
-        listElement.appendChild(
-        createListElement(message[i]));
+      listElement.appendChild(createListElement(message[i]));
     }
     
   });

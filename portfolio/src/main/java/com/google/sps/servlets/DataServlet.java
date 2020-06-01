@@ -27,6 +27,7 @@ import java.util.ArrayList;
 public class DataServlet extends HttpServlet {
 
   private ArrayList<String> commentList;
+  private String json;
 
   @Override
   public void init() {
@@ -34,12 +35,11 @@ public class DataServlet extends HttpServlet {
     commentList.add("Hello Alisa!");
     commentList.add("Hola");
     commentList.add("How are you?");
+    json = convertToJson(commentList);
   }
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String json = convertToJson(commentList);
-
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
