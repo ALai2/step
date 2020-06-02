@@ -31,7 +31,7 @@ function addRandomFact() {
 }
 
 /**
- * Fetches a random message from server and places it into message-container
+ * Fetches comments from server and places it into message-container
  */
 function getComments() {
   var commentLimit = document.getElementById("commentLimit").value;
@@ -46,7 +46,7 @@ function getComments() {
   }
 }
 
-/** Creates an <li> element containing text. */
+/** Creates an <li> element containing text and a checkbox for deletion. */
 function createListElement(commentElement) {
   const liElement = document.createElement('li');
   liElement.className = 'comment';
