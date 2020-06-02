@@ -35,11 +35,11 @@ public class DataServlet extends HttpServlet {
     commentList.add("Hello Alisa!");
     commentList.add("Hola");
     commentList.add("How are you?");
-    json = convertToJson(commentList);
   }
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    json = convertToJson(commentList);
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
