@@ -1,17 +1,100 @@
-#content {
+#hufflepuff-stripes {
+  background: repeating-linear-gradient(
+    45deg,
+    gold,
+    gold 100px,
+    black 100px,
+    black 200px
+  );
+}
+
+#ravenclaw-stripes {
+  background: repeating-linear-gradient(
+    45deg,
+    rgb(52, 190, 236),
+    rgb(52, 190, 236) 100px,
+    rgba(143, 66, 22, 0.795) 100px,
+    rgba(143, 66, 22, 0.795) 200px
+  );
+}
+
+#title {
+  color: white;
+  font-family: cursive;
+  font-size: 60px; 
+  text-shadow: -2px 0 orange, 0 2px orange, 2px 0 orange, 0 -2px orange;
+}
+
+.content {
   margin-left: auto;
   margin-right: auto;
-  width: 650px;
+  width: 800px;
+} 
+
+h2 {
+  font-family: cursive;
 }
 
-#greeting-container {
-  margin-top: 20px;
+#fact-container {
+  margin-bottom: auto;
+  margin-top: auto;
 }
 
-#images {
-    text-align: center;
+.images {
+  text-align: center;
 }
-#image_label {
-    display: inline-block;
-    margin-left: 40px;
+
+.image-label {
+  display: inline-block;
+  font-family: 'Courier New', Courier, monospace;
+  margin-left: 40px;
+}
+
+img {
+  width: 250px;
+}
+
+#profile-image {
+  background: cyan;
+  border: 5px solid orange;
+  border-radius: 15px;
+  margin-bottom: 25px;
+  margin-top: 25px;
+  padding: 25px 25px 25px 25px;
+  width: 300px;
+}
+
+.section {
+  background: white;
+  border: 5px solid orange;
+  border-radius: 15px;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  padding: 25px 25px 25px 25px;
+}
+
+#bottom-section {
+  display:flex;
+}
+
+#link-section {
+  border-right: 5px solid orange;
+  margin-right: 25px;
+  padding-right: 25px;
+}
+
+#fun-button {
+  background: cyan;
+  border-radius: 10px;
+  font-family: 'Courier New', Courier, monospace;
+  padding: 3px 7px;
+}
+
+.page-button {
+  background: cyan;
+  border: 5px solid orange;
+  border-radius: 10px;
+  font-family: 'Courier New', Courier, monospace;
+  margin-bottom: 20px;
+  padding: 15px 32px;
 }
