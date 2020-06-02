@@ -42,8 +42,8 @@ function getComments() {
 }
 
 /** Creates an <li> element containing text. */
-function createListElement(comment) {
+function createListElement(commentElement) {
   const liElement = document.createElement('li');
-  liElement.innerText = comment[0] + " says: " + comment[1];
+  liElement.innerText = commentElement.name + " says: " + commentElement.comment;
   return liElement;
 }

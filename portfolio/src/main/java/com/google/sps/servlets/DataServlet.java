@@ -14,6 +14,7 @@
 
 package com.google.sps.servlets;
 
+import com.google.sps.data.Comment;
 import com.google.gson.Gson;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -26,11 +27,11 @@ import java.util.ArrayList;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private ArrayList<ArrayList<String>> commentList;
+  private ArrayList<Comment> commentList;
 
   @Override
   public void init() {
-    commentList = new ArrayList<ArrayList<String>>();
+    commentList = new ArrayList<Comment>();
   }
   
   @Override
@@ -57,11 +58,8 @@ public class DataServlet extends HttpServlet {
     String name = request.getParameter("name-input");
     String comment = request.getParameter("comment-input");
     
-    ArrayList<String> tmp = new ArrayList<>();
-    tmp.add(name);
-    tmp.add(comment);
-
-    commentList.add(tmp);
+    Comment newComment = new Comment(name, comment);
+    commentList.add(newComment);
 
     // Redirect back to the Comment page.
     response.sendRedirect("/comments.html");
