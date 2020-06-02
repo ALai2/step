@@ -16,6 +16,11 @@ package com.google.sps.servlets;
 
 import com.google.sps.data.Comment;
 import com.google.gson.Gson;
+
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -36,7 +41,7 @@ public class DataServlet extends HttpServlet {
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    json = convertToJson(commentList);
+    String json = convertToJson(commentList);
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
@@ -56,9 +61,13 @@ public class DataServlet extends HttpServlet {
     // Get the input from the form.
     String name = request.getParameter("name-input");
     String comment = request.getParameter("comment-input");
-    
-    Comment newComment = new Comment(name, comment);
-    commentList.add(newComment);
+
+    Entity commentEntity = new Entity("Comment");
+    commentEntity.setProperty("name", name);
+    commentEntity.setProperty("comment", comment);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(commentEntity);
 
     // Redirect back to the Comment page.
     response.sendRedirect("/comments.html");
