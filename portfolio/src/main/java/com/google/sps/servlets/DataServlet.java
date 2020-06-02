@@ -16,6 +16,14 @@ package com.google.sps.servlets;
 
 import com.google.sps.data.Comment;
 import com.google.gson.Gson;
+
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
+
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,29 +34,29 @@ import java.util.ArrayList;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-
-  private ArrayList<Comment> commentList;
-
-  @Override
-  public void init() {
-    commentList = new ArrayList<Comment>();
-  }
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    json = convertToJson(commentList);
+    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+
+    ArrayList<Comment> commentList = new ArrayList<Comment>();
+    for (Entity entity : results.asIterable()) {
+      long id = entity.getKey().getId();
+      String name = (String) entity.getProperty("name");
+      String comment = (String) entity.getProperty("comment");
+      long timestamp = (long) entity.getProperty("timestamp");
+
+      Comment commentObject = new Comment(id, name, comment, timestamp);
+      commentList.add(commentObject);
+    }
+    
+    Gson gson = new Gson();
+    String json = gson.toJson(commentList);
     response.setContentType("application/json;");
     response.getWriter().println(json);
-  }
-
-  /**
-   * Converts an ArrayList into a JSON string using the Gson library. Note: We first added
-   * the Gson library dependency to pom.xml.
-   */
-  private String convertToJson(ArrayList list) {
-    Gson gson = new Gson();
-    String json = gson.toJson(list);
-    return json;
   }
 
   @Override
@@ -56,9 +64,15 @@ public class DataServlet extends HttpServlet {
     // Get the input from the form.
     String name = request.getParameter("name-input");
     String comment = request.getParameter("comment-input");
-    
-    Comment newComment = new Comment(name, comment);
-    commentList.add(newComment);
+    long timestamp = System.currentTimeMillis();
+
+    Entity commentEntity = new Entity("Comment");
+    commentEntity.setProperty("name", name);
+    commentEntity.setProperty("comment", comment);
+    commentEntity.setProperty("timestamp", timestamp);
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(commentEntity);
 
     // Redirect back to the Comment page.
     response.sendRedirect("/comments.html");

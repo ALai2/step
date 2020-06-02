@@ -14,30 +14,21 @@
 
 package com.google.sps.data;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Class representing a comment
- *
- * <p>Note: The private variables in this class are converted into JSON.
  */
 public class Comment {
 
+  private long id;
   private String name;
   private String comment;
+  private long timestamp;
 
-  public Comment(String inputName, String inputComment) {
-    name = inputName;
-    comment = inputComment; 
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public String getComment() {
-    return comment;
+  public Comment(long id, String name, String comment, long timestamp) {
+    this.id = id;
+    this.name = name;
+    this.comment = comment; 
+    this.timestamp = timestamp;
   }
 
 }
