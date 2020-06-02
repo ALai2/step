@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Portfolio Comments</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+  </head>
+  <body onload="getComments()" id="gryffindor-stripes">
+    <div id="content">
+      <h1 id="title"><strong>Portfolio Comments</strong></h1>
+      <div class="section">
+        <h2>Comments</h2>
+        <ul id="comments"></ul>
+      </div>
+      <div class="section">
+        <h2>New Comment</h2>
+        <form action="/data" method="POST">
+          <span>Name:</span>
+          <textarea required="true" placeholder="Place your name here..." name="name-input"></textarea>
+          <br/>
+          <span>Comment:</span>
+          <textarea required="true" placeholder="Place your comment here..." name="comment-input"></textarea>
+          <br/><br/>
+          <input type="submit" />
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

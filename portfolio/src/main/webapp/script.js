@@ -18,9 +18,9 @@
 
 function addRandomFact() {
   const facts =
-      ['I have a twin sister.', 'I have arachnophobia.', 'My high school graduating class had only 60 people.',
-      'My favorite color is green.', 'Hufflepuff is the best!', 'My hidden talent is gaming.',
-      "Most of my friends aren't CS majors.", 'I played tennis in high school.'];
+    ['I have a twin sister.', 'I have arachnophobia.', 'My high school graduating class had only 60 people.',
+    'My favorite color is green.', 'Hufflepuff is the best!', 'My hidden talent is gaming.',
+    "Most of my friends aren't CS majors.", 'I played tennis in high school.'];
 
   // Pick a random fact.
   const fact = facts[Math.floor(Math.random() * facts.length)];
@@ -33,19 +33,17 @@ function addRandomFact() {
 /**
  * Fetches a random message from server and places it into message-container
  */
-function getRandomMessage() {
-  fetch('/data').then(response => response.json()).then((message) => {
-    const listElement = document.getElementById('message-container');
+function getComments() {
+  fetch('/data').then(response => response.json()).then((comments) => {
+    const listElement = document.getElementById('comments');
     listElement.innerHTML = "";
-    
-    message.forEach(element => listElement.appendChild(createListElement(element)));
-    
+    comments.forEach(comment => listElement.appendChild(createListElement(comment)));
   });
 }
 
 /** Creates an <li> element containing text. */
-function createListElement(text) {
+function createListElement(commentElement) {
   const liElement = document.createElement('li');
-  liElement.innerText = text;
+  liElement.innerText = commentElement.name + " says: " + commentElement.comment;
   return liElement;
 }
