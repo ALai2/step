@@ -31,7 +31,7 @@ function addRandomFact() {
 }
 
 /**
- * Fetches comments from java servlet and places it into comment-container
+ * Fetches a random message from server and places it into message-container
  */
 function getComments() {
   fetch('/data').then(response => response.json()).then((comments) => {
