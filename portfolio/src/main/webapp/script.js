@@ -31,7 +31,7 @@ function addRandomFact() {
 }
 
 /**
- * Fetches a random message from java servlet and places it into message-container
+ * Fetches a random message from server and places it into message-container
  */
 function getRandomMessage() {
   fetch('/data').then(response => response.json()).then((message) => {
