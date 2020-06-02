@@ -11,7 +11,10 @@
       <h1 id="title"><strong>Portfolio Comments</strong></h1>
       <div class="section">
         <h2>Comments</h2>
+        <span>Max number of comments shown: <span>
+        <input type="number" id="commentLimit" value="10" min="0" onchange="getComments()">
         <ul id="comments"></ul>
+        <button onclick=deleteComments()>Delete Comments</button>
       </div>
       <div class="section">
         <h2>New Comment</h2>

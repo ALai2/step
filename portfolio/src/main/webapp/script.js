@@ -34,16 +34,52 @@ function addRandomFact() {
  * Fetches a random message from server and places it into message-container
  */
 function getComments() {
-  fetch('/data').then(response => response.json()).then((comments) => {
-    const listElement = document.getElementById('comments');
-    listElement.innerHTML = "";
-    comments.forEach(comment => listElement.appendChild(createListElement(comment)));
-  });
+  var commentLimit = document.getElementById("commentLimit").value;
+  if (commentLimit < 0) {
+    alert("Max number of comments must be at least 0");
+  } else {
+    fetch('/data?limit=' + commentLimit).then(response => response.json()).then((comments) => {
+      const listElement = document.getElementById('comments');
+      listElement.innerHTML = "";
+      comments.forEach(comment => listElement.appendChild(createListElement(comment)));
+    });
+  }
 }
 
 /** Creates an <li> element containing text. */
 function createListElement(commentElement) {
   const liElement = document.createElement('li');
-  liElement.innerText = commentElement.name + " says: " + commentElement.comment;
+  liElement.className = 'comment';
+
+  const titleElement = document.createElement('span');
+  titleElement.innerText = commentElement.name + " says: " + commentElement.comment;
+
+  const deleteCheckboxElement = document.createElement('input');
+  deleteCheckboxElement.type = "checkbox";
+  deleteCheckboxElement.value = commentElement.id;
+
+  liElement.appendChild(titleElement);
+  liElement.appendChild(deleteCheckboxElement);
   return liElement;
+}
+
+/** Delete every single comment with a checked checkbox */
+function deleteComments() {
+  const listComments = document.getElementById('comments').children;
+  const arrayComments = Array.from(listComments);
+
+  arrayComments.forEach((comment) => {
+    const commentElements = Array.from(comment.children);
+    if (commentElements[1].checked == true) {
+        deleteSingleComment(commentElements[1].value);
+        comment.remove();
+    }
+  });
+}
+
+/** Delete comment by sending comment id with post request to server */
+function deleteSingleComment(commentId) {
+  const params = new URLSearchParams();
+  params.append('id', commentId);
+  fetch('/delete-data', {method: 'POST', body: params});
 }
