@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -30,6 +31,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.List;
 
 /** Servlet that returns and saves comments in Datastore */
 @WebServlet("/data")
@@ -42,9 +44,10 @@ public class DataServlet extends HttpServlet {
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
+    List<Entity> queryList = results.asList(FetchOptions.Builder.withLimit(commentLimit));
 
     ArrayList<Comment> commentList = new ArrayList<Comment>();
-    for (Entity entity : results.asIterable()) {
+    for (Entity entity : queryList) {
       long id = entity.getKey().getId();
       String name = (String) entity.getProperty("name");
       String comment = (String) entity.getProperty("comment");
@@ -55,12 +58,7 @@ public class DataServlet extends HttpServlet {
     }
     
     Gson gson = new Gson();   
-    String json;
-    if (commentLimit < commentList.size()) {
-      json = gson.toJson(commentList.subList(0,commentLimit));
-    } else {
-      json = gson.toJson(commentList);
-    }
+    String json = gson.toJson(commentList);
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
