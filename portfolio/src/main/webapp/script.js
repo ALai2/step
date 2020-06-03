@@ -48,18 +48,19 @@ function getComments() {
 
 /** Creates an <li> element containing text and a checkbox for deletion. */
 function createListElement(commentElement) {
-  const liElement = document.createElement('li');
+  const liElement = document.createElement('label');
+  liElement.innerHTML = commentElement.name + " says: " + commentElement.comment;
   liElement.className = 'comment';
-
-  const titleElement = document.createElement('span');
-  titleElement.innerText = commentElement.name + " says: " + commentElement.comment;
 
   const deleteCheckboxElement = document.createElement('input');
   deleteCheckboxElement.type = "checkbox";
   deleteCheckboxElement.value = commentElement.id;
 
-  liElement.appendChild(titleElement);
+  const checkmarkElement = document.createElement('span');
+  checkmarkElement.className = 'checkmark';
+
   liElement.appendChild(deleteCheckboxElement);
+  liElement.appendChild(checkmarkElement);
   return liElement;
 }
 
@@ -70,8 +71,8 @@ function deleteComments() {
 
   arrayComments.forEach((comment) => {
     const commentElements = Array.from(comment.children);
-    if (commentElements[1].checked == true) {
-        deleteSingleComment(commentElements[1].value);
+    if (commentElements[0].checked == true) {
+        deleteSingleComment(commentElements[0].value);
         comment.remove();
     }
   });
