@@ -71,15 +71,16 @@ function deleteComments() {
   arrayComments.forEach((comment) => {
     const commentElements = Array.from(comment.children);
     if (commentElements[1].checked == true) {
-        deleteSingleComment(commentElements[1].value);
-        comment.remove();
+      deleteSingleComment(comment, commentElements[1].value);
     }
   });
 }
 
 /** Delete comment by sending comment id with post request to server */
-function deleteSingleComment(commentId) {
+function deleteSingleComment(comment, commentId) {
   const params = new URLSearchParams();
   params.append('id', commentId);
-  fetch('/delete-data', {method: 'POST', body: params});
+  fetch('/delete-data', {method: 'POST', body: params}).then(() => {
+    comment.remove();
+  });
 }
