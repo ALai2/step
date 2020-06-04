@@ -54,6 +54,7 @@ function createListElement(commentElement) {
 
   const deleteCheckboxElement = document.createElement('input');
   deleteCheckboxElement.type = "checkbox";
+  deleteCheckboxElement.name = "checkbox";
   deleteCheckboxElement.value = commentElement.id;
 
   const checkmarkElement = document.createElement('span');
@@ -66,21 +67,18 @@ function createListElement(commentElement) {
 
 /** Delete every single comment with a checked checkbox */
 function deleteComments() {
-  const listComments = document.getElementById('comments').children;
-  const arrayComments = Array.from(listComments);
-
-  arrayComments.forEach((comment) => {
-    const commentElements = Array.from(comment.children);
-    if (commentElements[0].checked == true) {
-        deleteSingleComment(commentElements[0].value);
-        comment.remove();
-    }
+  // get all list elements with a checked checkbox
+  const checkedListElements = document.querySelectorAll('input[name="checkbox"]:checked');
+  
+  checkedListElements.forEach((liElement) => {
+    deleteSingleComment(liElement);
+    liElement.remove();
   });
 }
 
 /** Delete comment by sending comment id with post request to server */
-function deleteSingleComment(commentId) {
+function deleteSingleComment(liElement) {
   const params = new URLSearchParams();
-  params.append('id', commentId);
+  params.append('id', liElement.value);
   fetch('/delete-data', {method: 'POST', body: params});
 }
