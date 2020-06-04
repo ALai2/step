@@ -68,10 +68,11 @@ function createListElement(commentElement) {
 /** Delete every single comment with a checked checkbox */
 function deleteComments() {
   // get all list elements with a checked checkbox
-  const checkedListElements = document.querySelectorAll('input[name="checkbox"]:checked');
+  const checkedcheckboxes = document.querySelectorAll('input[name="checkbox"]:checked');
   
-  checkedListElements.forEach((liElement) => {
-    deleteSingleComment(liElement);
+  checkedcheckboxes.forEach((checkbox) => {
+    const liElement = checkbox.parentNode;
+    deleteSingleComment(checkbox);
     liElement.remove();
   });
 }
