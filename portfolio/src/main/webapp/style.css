@@ -96,8 +96,8 @@ h2 {
   cursor: pointer;
   display: block;
   font-size: 18px;
-  margin-bottom: 10px;
-  padding-left: 30px;
+  margin-bottom: 15px;
+  padding-left: 40px;
   position: relative;
   user-select: none;
 }
@@ -113,6 +113,8 @@ h2 {
 /* Style checkmark box */
 .checkmark {
   background-color: rgb(230, 211, 104);
+  border: 2px solid orange;
+  border-radius: 5px;
   height: 25px;
   left: 0;
   position: absolute;
@@ -149,4 +151,66 @@ h2 {
   top: 5px;
   transform: rotate(45deg);
   width: 5px;
+}
+
+#new-comment-section {
+  background-image: url("/images/VinesBackground.png");
+}
+
+.entry-box {
+  position: relative;
+}
+
+.entry-name {
+  display: block;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 20px;
+  padding-right: 10px;
+  position: absolute;
+  text-align: right;
+  top: 0;
+  width: 100px;
+}
+
+.text-box {
+  border: solid 5px gold;
+  border-radius: 15px;
+  display: block;
+  margin-left: 115px;
+  padding: 10px;
+}
+
+.text-box:focus {
+  border: solid 5px red
+}
+
+#name-entry {
+  height: 40px;
+  width: 30%;
+}
+
+#comment-entry {
+  height: 200px;
+  width: 70%;
+}
+
+.comment-button {
+  background: cyan;
+  border: solid 2px orange;
+  border-radius: 5px;
+  font-family: 'Courier New', Courier, monospace;
+  padding: 5px 10px;
+  transition-duration: 0.4s;
+}
+
+.comment-button:hover {
+  background: gold;
+  border: solid 2px red;
+  padding: 8px 16px;
+}
+
+#comment-submit-button {
+  left: 45%;
+  margin-bottom: 10px;
+  position: relative;
 }
