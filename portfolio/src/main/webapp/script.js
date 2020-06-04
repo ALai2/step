@@ -77,9 +77,9 @@ function deleteComments() {
   });
 }
 
-/** Delete comment by sending comment id with post request to server */
-function deleteSingleComment(liElement) {
+/** Delete comment by sending value of checkbox with post request to server */
+function deleteSingleComment(checkbox) {
   const params = new URLSearchParams();
-  params.append('id', liElement.value);
+  params.append('id', checkbox.value);
   fetch('/delete-data', {method: 'POST', body: params});
 }
