@@ -34,7 +34,7 @@ function addRandomFact() {
  * Fetches comments from server and places it into message-container
  */
 function getComments() {
-  var commentLimit = document.getElementById("commentLimit").value;
+  var commentLimit = document.getElementById("comment-limit").value;
   if (commentLimit < 0) {
     alert("Max number of comments must be at least 0");
   } else {
