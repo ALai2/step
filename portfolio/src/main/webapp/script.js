@@ -78,7 +78,7 @@ function deleteComments() {
 /** Delete comment by sending comment id with post request to server */
 function deleteSingleComment(checkbox) {
   const params = new URLSearchParams();
-  params.append('id', checkbox);
+  params.append('id', checkbox.value);
   fetch('/delete-data', {method: 'POST', body: params}).then(() => {
     const liElement = checkbox.parentNode;
     liElement.remove();
