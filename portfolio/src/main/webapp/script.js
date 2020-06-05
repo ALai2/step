@@ -18,9 +18,14 @@
 
 function addRandomFact() {
   const facts =
-    ['I have a twin sister.', 'I have arachnophobia.', 'My high school graduating class had only 60 people.',
-    'My favorite color is green.', 'Hufflepuff is the best!', 'My hidden talent is gaming.',
-    "Most of my friends aren't CS majors.", 'I played tennis in high school.'];
+      ['I have a twin sister.', 
+       'I have arachnophobia.', 
+       'My high school graduating class had only 60 people.',
+       'My favorite color is green.', 
+       'Hufflepuff is the best!', 
+       'My hidden talent is gaming.',
+       "Most of my friends aren't CS majors.", 
+       'I played tennis in high school.'];
 
   // Pick a random fact.
   const fact = facts[Math.floor(Math.random() * facts.length)];
