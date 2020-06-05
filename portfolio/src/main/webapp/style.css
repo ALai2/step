@@ -198,6 +198,11 @@ h2 {
   margin-left: 10px;
 }
 
+#language {
+  margin-left: 5px;
+  padding-top: 5px 15px;
+}
+
 #max-comments-text {
   font-family: 'Courier New', Courier, monospace;
 }

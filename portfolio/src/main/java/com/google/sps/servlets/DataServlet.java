@@ -40,8 +40,10 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     int commentLimit = Integer.parseInt(request.getParameter("limit"));
-    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
+    String languageCode = request.getParameter("languageCode");
+    System.out.println(languageCode);
 
+    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
     List<Entity> queryList = results.asList(FetchOptions.Builder.withLimit(commentLimit));

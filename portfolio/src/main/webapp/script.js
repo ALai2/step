@@ -34,11 +34,13 @@ function addRandomFact() {
  * Fetches comments from server and places it into message-container
  */
 function getComments() {
-  var commentLimit = document.getElementById("comment-limit").value;
+  const commentLimit = document.getElementById("comment-limit").value;
+  const languageCode = document.getElementById('language').value;
+
   if (commentLimit < 0) {
     alert("Max number of comments must be at least 0");
   } else {
-    fetch('/data?limit=' + commentLimit).then(response => response.json()).then((comments) => {
+    fetch('/data?limit=' + commentLimit + '&languageCode=' + languageCode).then(response => response.json()).then((comments) => {
       const listElement = document.getElementById('comments');
       listElement.innerHTML = "";
       comments.forEach(comment => listElement.appendChild(createListElement(comment)));
@@ -80,7 +82,6 @@ function deleteSingleComment(checkbox) {
   const params = new URLSearchParams();
   params.append('id', checkbox.value);
   fetch('/delete-data', {method: 'POST', body: params}).then(() => {
-    const liElement = checkbox.parentNode;
-    liElement.remove();
+    getComments();
   });
 }
