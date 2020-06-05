@@ -25,6 +25,10 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
+
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -41,12 +45,16 @@ public class DataServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     int commentLimit = Integer.parseInt(request.getParameter("limit"));
     String languageCode = request.getParameter("languageCode");
-    System.out.println(languageCode);
 
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
     List<Entity> queryList = results.asList(FetchOptions.Builder.withLimit(commentLimit));
+
+    Translate translate = null;
+    if (!languageCode.equals("original")) {
+      translate = TranslateOptions.getDefaultInstance().getService();
+    }
 
     ArrayList<Comment> commentList = new ArrayList<Comment>();
     for (Entity entity : queryList) {
@@ -54,6 +62,12 @@ public class DataServlet extends HttpServlet {
       String name = (String) entity.getProperty("name");
       String comment = (String) entity.getProperty("comment");
       long timestamp = (long) entity.getProperty("timestamp");
+
+      // Do the translation.
+      if (!languageCode.equals("original")) {
+        Translation translation = translate.translate(comment, Translate.TranslateOption.targetLanguage(languageCode));
+        comment = translation.getTranslatedText();
+      }
 
       Comment commentObject = new Comment(id, name, comment, timestamp);
       commentList.add(commentObject);
