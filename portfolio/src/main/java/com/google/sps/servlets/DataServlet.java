@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -30,20 +31,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.List;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+/** Servlet that returns and saves comments in Datastore */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    int commentLimit = Integer.parseInt(request.getParameter("limit"));
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
+    List<Entity> queryList = results.asList(FetchOptions.Builder.withLimit(commentLimit));
 
     ArrayList<Comment> commentList = new ArrayList<Comment>();
-    for (Entity entity : results.asIterable()) {
+    for (Entity entity : queryList) {
       long id = entity.getKey().getId();
       String name = (String) entity.getProperty("name");
       String comment = (String) entity.getProperty("comment");
@@ -53,9 +57,9 @@ public class DataServlet extends HttpServlet {
       commentList.add(commentObject);
     }
     
-    Gson gson = new Gson();
+    Gson gson = new Gson();   
     String json = gson.toJson(commentList);
-    response.setContentType("application/json;");
+    response.setContentType("application/json; charset=utf-8");
     response.getWriter().println(json);
   }
 
