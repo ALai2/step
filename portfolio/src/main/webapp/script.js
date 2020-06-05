@@ -71,15 +71,16 @@ function deleteComments() {
   const checkedcheckboxes = document.querySelectorAll('input[name="checkbox"]:checked');
   
   checkedcheckboxes.forEach((checkbox) => {
-    const liElement = checkbox.parentNode;
     deleteSingleComment(checkbox);
-    liElement.remove();
   });
 }
 
-/** Delete comment by sending value of checkbox with post request to server */
+/** Delete comment by sending comment id with post request to server */
 function deleteSingleComment(checkbox) {
   const params = new URLSearchParams();
-  params.append('id', checkbox.value);
-  fetch('/delete-data', {method: 'POST', body: params});
+  params.append('id', checkbox);
+  fetch('/delete-data', {method: 'POST', body: params}).then(() => {
+    const liElement = checkbox.parentNode;
+    liElement.remove();
+  });
 }

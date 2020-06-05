@@ -36,17 +36,13 @@ import java.util.List;
 /** Servlet that returns and saves comments in Datastore */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  DatastoreService datastore;
-
-  public void init() {
-    datastore = DatastoreServiceFactory.getDatastoreService();
-  }
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     int commentLimit = Integer.parseInt(request.getParameter("limit"));
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
 
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
     List<Entity> queryList = results.asList(FetchOptions.Builder.withLimit(commentLimit));
 
@@ -79,6 +75,7 @@ public class DataServlet extends HttpServlet {
     commentEntity.setProperty("comment", comment);
     commentEntity.setProperty("timestamp", timestamp);
 
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
 
     // Redirect back to the Comment page.
