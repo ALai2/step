@@ -34,7 +34,7 @@ function addRandomFact() {
  * Fetches comments from server and places it into message-container
  */
 function getComments() {
-  var commentLimit = document.getElementById("commentLimit").value;
+  var commentLimit = document.getElementById("comment-limit").value;
   if (commentLimit < 0) {
     alert("Max number of comments must be at least 0");
   } else {
@@ -48,39 +48,39 @@ function getComments() {
 
 /** Creates an <li> element containing text and a checkbox for deletion. */
 function createListElement(commentElement) {
-  const liElement = document.createElement('li');
+  const liElement = document.createElement('label');
+  liElement.innerHTML = commentElement.name + " says: " + commentElement.comment;
   liElement.className = 'comment';
-
-  const titleElement = document.createElement('span');
-  titleElement.innerText = commentElement.name + " says: " + commentElement.comment;
 
   const deleteCheckboxElement = document.createElement('input');
   deleteCheckboxElement.type = "checkbox";
+  deleteCheckboxElement.name = "checkbox";
   deleteCheckboxElement.value = commentElement.id;
 
-  liElement.appendChild(titleElement);
+  const checkmarkElement = document.createElement('span');
+  checkmarkElement.className = 'checkmark';
+
   liElement.appendChild(deleteCheckboxElement);
+  liElement.appendChild(checkmarkElement);
   return liElement;
 }
 
 /** Delete every single comment with a checked checkbox */
 function deleteComments() {
-  const listComments = document.getElementById('comments').children;
-  const arrayComments = Array.from(listComments);
-
-  arrayComments.forEach((comment) => {
-    const commentElements = Array.from(comment.children);
-    if (commentElements[1].checked == true) {
-      deleteSingleComment(comment, commentElements[1].value);
-    }
+  // get all list elements with a checked checkbox
+  const checkedcheckboxes = document.querySelectorAll('input[name="checkbox"]:checked');
+  
+  checkedcheckboxes.forEach((checkbox) => {
+    deleteSingleComment(checkbox);
   });
 }
 
 /** Delete comment by sending comment id with post request to server */
-function deleteSingleComment(comment, commentId) {
+function deleteSingleComment(checkbox) {
   const params = new URLSearchParams();
-  params.append('id', commentId);
+  params.append('id', checkbox);
   fetch('/delete-data', {method: 'POST', body: params}).then(() => {
-    comment.remove();
+    const liElement = checkbox.parentNode;
+    liElement.remove();
   });
 }
