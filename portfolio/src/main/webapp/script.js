@@ -48,6 +48,12 @@ function getComments() {
   }
 }
 
+const BEAMING_FACE = "&#128513";
+const SMILING_FACE = "&#128578";
+const NEUTRAL_FACE = "&#128528";
+const FROWNING_FACE = "&#128577";
+const CRYING_FACE = "&#128546";
+
 /** Creates an <li> element containing text and a checkbox for deletion. */
 function createListElement(commentElement) {
   const liElement = document.createElement('label');
@@ -62,8 +68,24 @@ function createListElement(commentElement) {
   const checkmarkElement = document.createElement('span');
   checkmarkElement.className = 'checkmark';
 
+  const sentimentElement = document.createElement('span');
+  sentimentElement.className = 'sentiment';
+  const score = commentElement.score;
+  if (score < -0.6) {
+    sentimentElement.innerHTML = CRYING_FACE;
+  } else if (score < -0.2) {
+    sentimentElement.innerHTML = FROWNING_FACE;
+  } else if (score < 0.2) {
+    sentimentElement.innerHTML = NEUTRAL_FACE;
+  } else if (score < 0.6) {
+    sentimentElement.innerHTML = SMILING_FACE;
+  } else {
+    sentimentElement.innerHTML = BEAMING_FACE;
+  }
+  
   liElement.appendChild(deleteCheckboxElement);
   liElement.appendChild(checkmarkElement);
+  liElement.appendChild(sentimentElement);
   return liElement;
 }
 

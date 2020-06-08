@@ -153,6 +153,10 @@ h2 {
   width: 5px;
 }
 
+.sentiment {
+  margin-left: 10px;
+}
+
 #new-comment-section {
   background-image: url("/images/VinesBackground.png");
 }
