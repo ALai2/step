@@ -28,6 +28,7 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
+import com.google.cloud.translate.TranslateException;
 
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -51,10 +52,7 @@ public class DataServlet extends HttpServlet {
     PreparedQuery results = datastore.prepare(query);
     List<Entity> queryList = results.asList(FetchOptions.Builder.withLimit(commentLimit));
 
-    Translate translate = null;
-    if (!languageCode.equals("original")) {
-      translate = TranslateOptions.getDefaultInstance().getService();
-    }
+    Translate translate = translate = TranslateOptions.getDefaultInstance().getService();
 
     ArrayList<Comment> commentList = new ArrayList<Comment>();
     for (Entity entity : queryList) {
@@ -65,8 +63,12 @@ public class DataServlet extends HttpServlet {
 
       // Do the translation.
       if (!languageCode.equals("original")) {
-        Translation translation = translate.translate(comment, Translate.TranslateOption.targetLanguage(languageCode));
-        comment = translation.getTranslatedText();
+        try {
+          Translation translation = translate.translate(comment, Translate.TranslateOption.targetLanguage(languageCode));
+          comment = translation.getTranslatedText();
+        } catch (TranslateException error) {
+          System.out.println("Google Translate API returned an error " + error.getMessage());
+        }
       }
 
       Comment commentObject = new Comment(id, name, comment, timestamp);
