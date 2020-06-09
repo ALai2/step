@@ -41,9 +41,13 @@ function getComments() {
     alert("Max number of comments must be at least 0");
   } else {
     fetch('/data?limit=' + commentLimit + '&languageCode=' + languageCode).then(response => response.json()).then((comments) => {
-      const listElement = document.getElementById('comments');
-      listElement.innerHTML = "";
-      comments.forEach(comment => listElement.appendChild(createListElement(comment)));
+      if (comments.error == null) {
+        const listElement = document.getElementById('comments');
+        listElement.innerHTML = "";
+        comments.forEach(comment => listElement.appendChild(createListElement(comment)));
+      } else {
+        alert(comments.error);
+      }
     });
   }
 }

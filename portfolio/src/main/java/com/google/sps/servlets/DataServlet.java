@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 
 /** Servlet that returns and saves comments in Datastore */
 @WebServlet("/data")
@@ -54,31 +55,39 @@ public class DataServlet extends HttpServlet {
 
     Translate translate = translate = TranslateOptions.getDefaultInstance().getService();
 
-    ArrayList<Comment> commentList = new ArrayList<Comment>();
-    for (Entity entity : queryList) {
-      long id = entity.getKey().getId();
-      String name = (String) entity.getProperty("name");
-      String comment = (String) entity.getProperty("comment");
-      long timestamp = (long) entity.getProperty("timestamp");
+    try {
+      ArrayList<Comment> commentList = new ArrayList<Comment>();
+      for (Entity entity : queryList) {
+        long id = entity.getKey().getId();
+        String name = (String) entity.getProperty("name");
+        String comment = (String) entity.getProperty("comment");
+        long timestamp = (long) entity.getProperty("timestamp");
 
-      // Do the translation.
-      if (!languageCode.equals("original")) {
-        try {
+        // Do the translation.
+        if (!languageCode.equals("original")) {
           Translation translation = translate.translate(comment, Translate.TranslateOption.targetLanguage(languageCode));
           comment = translation.getTranslatedText();
-        } catch (TranslateException error) {
-          System.out.println("Google Translate API returned an error " + error.getMessage());
         }
-      }
 
-      Comment commentObject = new Comment(id, name, comment, timestamp);
-      commentList.add(commentObject);
-    }
+        Comment commentObject = new Comment(id, name, comment, timestamp);
+        commentList.add(commentObject);
+      }
     
-    Gson gson = new Gson();   
-    String json = gson.toJson(commentList);
-    response.setContentType("application/json; charset=utf-8");
-    response.getWriter().println(json);
+      Gson gson = new Gson();   
+      String json = gson.toJson(commentList);
+      response.setContentType("application/json; charset=utf-8");
+      response.getWriter().println(json);
+
+    } catch (TranslateException error) {
+      String errorMessage = "Google Translate API returned an error " + error.getMessage();
+      HashMap<String, String> errorMap = new HashMap<>();
+      errorMap.put("error", errorMessage);
+      
+      Gson gson = new Gson();   
+      String json = gson.toJson(errorMap);
+      response.setContentType("application");
+      response.getWriter().println(json);
+    }
   }
 
   @Override
