@@ -35,9 +35,11 @@ function addRandomFact() {
   factContainer.innerText = fact; 
 }
 
+const SNAKE_LENGTH = 10;
 const SNAKE_SQUARE_SIZE = 30;
 var x = new Array(5);
 var y = new Array(5);
+var prevMousePressLoc;
 
 function getCanvasAndContext() {
   var canvas = document.getElementById('snakeCanvas'); // Get the canvas element by Id
@@ -49,11 +51,15 @@ function getCanvasAndContext() {
 }
 
 function initSnake() {
-  for (var z = 0; z < 5; z++) {
-    x[z] = 10;
-    y[z] = 10;
+  var values = getCanvasAndContext();
+  var canvas = values.canvas;
+
+  for (var z = 0; z < SNAKE_LENGTH; z++) {
+    x[z] = canvas.width / 2;
+    y[z] = canvas.height / 2;
   }
   drawSnake();
+  gameLoop();
 }
 	
 function drawSnake() {
@@ -63,14 +69,24 @@ function drawSnake() {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   
-  for (var z = 0; z < 5; z++) {
+  for (var z = SNAKE_LENGTH - 1; z >= 0; z--) {
     ctx.beginPath();
-    ctx.rect(x[z], y[z], SNAKE_SQUARE_SIZE, SNAKE_SQUARE_SIZE);
-    ctx.fillStyle = "#ff0000";
-    ctx.fill();
+
+    if (z == 0) {
+      ctx.fillStyle = "#000000";
+    } else if (z % 2 == 0) {
+      ctx.fillStyle = "#FF9900";
+    } else {
+      ctx.fillStyle = "#FF0000";
+    }
+    ctx.fillRect(x[z], y[z], SNAKE_SQUARE_SIZE, SNAKE_SQUARE_SIZE);
     ctx.closePath();
   }
 }
+
+document.addEventListener('mousedown', (event) => {
+  prevMousePressLoc = event.target;
+});
 
 const LEFT_KEY = 37;
 const RIGHT_KEY = 39;
@@ -79,18 +95,32 @@ const DOWN_KEY = 40;
 
 const STEP_SNAKE = 20;
 
-// move snake inside the canvas using arrow keys
-window.onkeydown = function(event) {
-  for (var z = 4; z > 0; z--) {
-    x[z] = x[(z - 1)];
-    y[z] = y[(z - 1)];
-  }
+var keysPressed = {};
 
+function gameLoop() {
   var values = getCanvasAndContext();
   var canvas = values.canvas;
+
+  if (prevMousePressLoc == canvas) {
+    for (var z = SNAKE_LENGTH - 1; z > 0; z--) {
+      x[z] = x[(z - 1)];
+      y[z] = y[(z - 1)];
+    }
+
+    (Object.keys(keysPressed)).forEach(keyPr => moveSnake(keyPr));
   
-  var keyPr = event.keyCode; // Key code of key pressed
-  
+    // Drawing snake at new position
+    drawSnake();
+  }
+
+  setTimeout(gameLoop, 50);
+}
+
+// move snake inside the canvas using arrow keys
+function moveSnake(keyPr) {
+  var values = getCanvasAndContext();
+  var canvas = values.canvas;
+
   if(keyPr == RIGHT_KEY && x[0] <= canvas.width - 40) { 
     x[0] = x[0] + STEP_SNAKE;
   } else if(keyPr == LEFT_KEY && x[0] > 10) {
@@ -100,7 +130,23 @@ window.onkeydown = function(event) {
   } else if(keyPr == DOWN_KEY && y[0] <= canvas.height - 40) {
     y[0] = y[0] + STEP_SNAKE; 
   }
+}
+
+window.onkeydown = function(event) {
+  var values = getCanvasAndContext();
+  var canvas = values.canvas;
+  if (prevMousePressLoc == canvas) {
+    event.preventDefault();
   
-  // Drawing snake at new position
-  drawSnake();
+    var keyPr = event.keyCode; // Key code of key pressed
+    keysPressed[keyPr] = true;
+  }
+};
+
+window.onkeyup = function(event) {
+  var values = getCanvasAndContext();
+  var canvas = values.canvas;
+  if (prevMousePressLoc == canvas) {
+    delete keysPressed[event.keyCode];
+  }
 };
