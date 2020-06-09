@@ -40,6 +40,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 
 /** Servlet that returns and saves comments in Datastore */
 @WebServlet("/data")
@@ -91,22 +92,34 @@ public class DataServlet extends HttpServlet {
     String comment = request.getParameter("comment-input");
     long timestamp = System.currentTimeMillis();
 
-    Document doc = Document.newBuilder().setContent(comment).setType(Document.Type.PLAIN_TEXT).build();
-    LanguageServiceClient languageService = LanguageServiceClient.create();
-    Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
-    double score = sentiment.getScore();
-    languageService.close();
+    try {
+      Document doc = Document.newBuilder().setContent(comment).setType(Document.Type.PLAIN_TEXT).build();
+      LanguageServiceClient languageService = LanguageServiceClient.create();
+      Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+      double score = sentiment.getScore();
+      languageService.close();
 
-    Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("name", name);
-    commentEntity.setProperty("comment", comment);
-    commentEntity.setProperty("timestamp", timestamp);
-    commentEntity.setProperty("score", score);
+      Entity commentEntity = new Entity("Comment");
+      commentEntity.setProperty("name", name);
+      commentEntity.setProperty("comment", comment);
+      commentEntity.setProperty("timestamp", timestamp);
+      commentEntity.setProperty("score", score);
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(commentEntity);
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      datastore.put(commentEntity);
 
-    // Redirect back to the Comment page.
-    response.sendRedirect("/comments.html");
+      // Redirect back to the Comment page.
+      response.sendRedirect("/comments.html");
+
+    } catch (Exception error) {
+      String errorMessage = "Google NLP API returned an error " + error.getMessage();
+      HashMap<String, String> errorMap = new HashMap<>();
+      errorMap.put("error", errorMessage);
+
+      Gson gson = new Gson();   
+      String json = gson.toJson(errorMap);
+      response.setContentType("application");
+      response.getWriter().println(json);
+    }
   }
 }

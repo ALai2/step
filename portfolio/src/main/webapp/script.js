@@ -107,3 +107,19 @@ function deleteSingleComment(checkbox) {
     getComments();
   });
 }
+
+function postComment() {
+  const name = document.getElementById('name-entry').value;
+  const comment = document.getElementById('comment-entry').value;
+
+  const params = new URLSearchParams();
+  params.append('name-input', name);
+  params.append('comment-input', comment);
+  fetch('/data', {method: 'POST', body: params}).then(response => response.json()).then((message) => {
+    if (message.error == null) {
+      getComments();
+    } else {
+      alert(message.error);
+    }
+  });
+}
