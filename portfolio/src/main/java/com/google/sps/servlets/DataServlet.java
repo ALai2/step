@@ -79,7 +79,7 @@ public class DataServlet extends HttpServlet {
       response.getWriter().println(json);
 
     } catch (TranslateException error) {
-      String errorMessage = "Google Translate API returned an error " + error.getMessage();
+      String errorMessage = "Error translating message";
       HashMap<String, String> errorMap = new HashMap<>();
       errorMap.put("error", errorMessage);
       
