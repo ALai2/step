@@ -112,7 +112,7 @@ public class DataServlet extends HttpServlet {
       response.sendRedirect("/comments.html");
 
     } catch (Exception error) {
-      String errorMessage = "Google NLP API returned an error " + error.getMessage();
+      String errorMessage = "Error analyzing sentiment";
       HashMap<String, String> errorMap = new HashMap<>();
       errorMap.put("error", errorMessage);
 
