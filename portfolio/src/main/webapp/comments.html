@@ -15,6 +15,16 @@
         <input type="number" class="text-box" id="comment-limit" value="10" min="0" onchange="getComments()">
         <ul id="comments"></ul>
         <button class="comment-button" onclick=deleteComments()>Delete Comments</button>
+        <br/><br/>
+        <button class="comment-button" onclick=getComments()>Translate All</button>
+        <select class="text-box" id="language">
+          <option value="original">Original</option>
+          <option value="en">English</option>
+          <option value="zh">Chinese</option>
+          <option value="es">Spanish</option>
+          <option value="hi">Hindi</option>
+          <option value="ar">Arabic</option>
+        </select>
       </div>
       <div class="section" id="new-comment-section">
         <h2>New Comment</h2>
