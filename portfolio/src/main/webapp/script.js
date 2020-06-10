@@ -30,6 +30,8 @@ function addRandomFact() {
   factContainer.innerText = fact; 
 }
 
+var userEmail;
+
 /**
  * Fetches comments from server and places it into message-container
  */
@@ -82,6 +84,11 @@ function createListElement(commentElement) {
   } else {
     sentimentElement.innerHTML = BEAMING_FACE;
   }
+
+  if (userEmail != commentElement.userEmail) {
+    deleteCheckboxElement.disabled = true;
+    checkmarkElement.className = 'disabled-checkmark';
+  }
   
   liElement.appendChild(deleteCheckboxElement);
   liElement.appendChild(checkmarkElement);
@@ -109,17 +116,70 @@ function deleteSingleComment(checkbox) {
 }
 
 function postComment() {
-  const name = document.getElementById('name-entry').value;
-  const comment = document.getElementById('comment-entry').value;
+  const name = document.getElementById('name-entry');
+  const comment = document.getElementById('comment-entry');
 
   const params = new URLSearchParams();
-  params.append('name-input', name);
-  params.append('comment-input', comment);
+  params.append('name-input', name.value);
+  params.append('comment-input', comment.value);
   fetch('/data', {method: 'POST', body: params}).then(response => response.json()).then((message) => {
     if (message.error == null) {
       getComments();
+
+      // show user that comment was posted
+      window.scrollTo(0,0);
+      name.value = "";
+      comment.value = "";
     } else {
       alert(message.error);
     }
   });
+}
+
+/**
+  * Checks with server if user has logged in.
+  * Display corresponding text and url in login section if login is true/false.
+  */
+function getLoginStatus() {
+  fetch('/user').then(response => response.json()).then((userInfo) => {
+    const loginStatusElement = document.getElementById('login-section');
+    loginStatusElement.innerHTML = "";
+
+    const commentSectionElement = document.getElementById("new-comment-section");
+
+    if (userInfo.isLoggedIn == "true") {
+      const logoutElement = document.createElement('a');
+      logoutElement.innerHTML = "Logout";
+      logoutElement.href = userInfo.logoutUrl;
+      logoutElement.className = "comment-button";
+
+      const emailElement = document.createElement('p');
+      emailElement.innerHTML = "Welcome, <strong>" + userInfo.email + "</strong>! Now you can post and delete comments!";
+      emailElement.className = "login-section-text";
+      userEmail = userInfo.email;
+
+      loginStatusElement.appendChild(logoutElement);
+      loginStatusElement.appendChild(emailElement);
+
+      commentSectionElement.style.display = "block";
+      
+    } else {
+      const loginElement = document.createElement('a');
+      loginElement.innerHTML = "Login";
+      loginElement.href = userInfo.loginUrl;
+      loginElement.className = "comment-button";
+
+      const textElement = document.createElement('p');
+      textElement.innerHTML = "Sign in to post and delete comments!";
+      textElement.className = "login-section-text";
+
+      loginStatusElement.appendChild(loginElement);
+      loginStatusElement.appendChild(textElement);
+
+      userEmail = null;
+      commentSectionElement.style.display = "none";
+    }
+  });
+
+  getComments();
 }

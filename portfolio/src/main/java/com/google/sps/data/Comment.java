@@ -24,6 +24,7 @@ public class Comment {
   private String comment;
   private long timestamp;
   private double score;
+  private String userEmail;
 
   /**
     * @param {id} The unique id of the comment.
@@ -32,13 +33,15 @@ public class Comment {
     * @param {timestamp} When the comment was posted.
     * @param {score} The sentiment score analyzed from the comment by google NLP API.
     *       - Valid range: [-1 to 1], -1 is most negative emotion and 1 is most positive emotion
+    * @param {userEmail} The email of the user
     */
-  public Comment(long id, String name, String comment, long timestamp, double score) {
+  public Comment(long id, String name, String comment, long timestamp, double score, String userEmail) {
     this.id = id;
     this.name = name;
     this.comment = comment; 
     this.timestamp = timestamp;
     this.score = score;
+    this.userEmail = userEmail;
   }
 
 }
