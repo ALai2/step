@@ -25,6 +25,11 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
+import com.google.cloud.translate.TranslateException;
+
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -32,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 
 /** Servlet that returns and saves comments in Datastore */
 @WebServlet("/data")
@@ -41,28 +47,47 @@ public class DataServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     int commentLimit = Integer.parseInt(request.getParameter("limit"));
     String languageCode = request.getParameter("languageCode");
-    System.out.println(languageCode);
 
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
     List<Entity> queryList = results.asList(FetchOptions.Builder.withLimit(commentLimit));
 
-    ArrayList<Comment> commentList = new ArrayList<Comment>();
-    for (Entity entity : queryList) {
-      long id = entity.getKey().getId();
-      String name = (String) entity.getProperty("name");
-      String comment = (String) entity.getProperty("comment");
-      long timestamp = (long) entity.getProperty("timestamp");
+    Translate translate = translate = TranslateOptions.getDefaultInstance().getService();
 
-      Comment commentObject = new Comment(id, name, comment, timestamp);
-      commentList.add(commentObject);
-    }
+    try {
+      ArrayList<Comment> commentList = new ArrayList<Comment>();
+      for (Entity entity : queryList) {
+        long id = entity.getKey().getId();
+        String name = (String) entity.getProperty("name");
+        String comment = (String) entity.getProperty("comment");
+        long timestamp = (long) entity.getProperty("timestamp");
+
+        // Do the translation.
+        if (!languageCode.equals("original")) {
+          Translation translation = translate.translate(comment, Translate.TranslateOption.targetLanguage(languageCode));
+          comment = translation.getTranslatedText();
+        }
+
+        Comment commentObject = new Comment(id, name, comment, timestamp);
+        commentList.add(commentObject);
+      }
     
-    Gson gson = new Gson();   
-    String json = gson.toJson(commentList);
-    response.setContentType("application/json; charset=utf-8");
-    response.getWriter().println(json);
+      Gson gson = new Gson();   
+      String json = gson.toJson(commentList);
+      response.setContentType("application/json; charset=utf-8");
+      response.getWriter().println(json);
+
+    } catch (TranslateException error) {
+      String errorMessage = "Error translating message";
+      HashMap<String, String> errorMap = new HashMap<>();
+      errorMap.put("error", errorMessage);
+      
+      Gson gson = new Gson();   
+      String json = gson.toJson(errorMap);
+      response.setContentType("application");
+      response.getWriter().println(json);
+    }
   }
 
   @Override
