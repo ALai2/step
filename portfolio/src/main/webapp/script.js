@@ -104,3 +104,64 @@ window.onkeydown = function(event) {
   // Drawing snake at new position
   drawSnake();
 };
+
+/**
+ * Fetches comments from server and places it into message-container
+ */
+function getComments() {
+  const commentLimit = document.getElementById("comment-limit").value;
+  const languageCode = document.getElementById('language').value;
+
+  if (commentLimit < 0) {
+    alert("Max number of comments must be at least 0");
+  } else {
+    fetch('/data?limit=' + commentLimit + '&languageCode=' + languageCode).then(response => response.json()).then((comments) => {
+      if (comments.error == null) {
+        const listElement = document.getElementById('comments');
+        listElement.innerHTML = "";
+        comments.forEach(comment => listElement.appendChild(createListElement(comment)));
+      } else {
+        alert(comments.error);
+      }
+    });
+  }
+}
+
+/** Creates an <li> element containing text and a checkbox for deletion. */
+function createListElement(commentElement) {
+  const liElement = document.createElement('label');
+  liElement.innerHTML = commentElement.name + " says: " + commentElement.comment;
+  liElement.className = 'comment';
+
+  const deleteCheckboxElement = document.createElement('input');
+  deleteCheckboxElement.type = "checkbox";
+  deleteCheckboxElement.name = "checkbox";
+  deleteCheckboxElement.value = commentElement.id;
+
+  const checkmarkElement = document.createElement('span');
+  checkmarkElement.className = 'checkmark';
+
+  liElement.appendChild(deleteCheckboxElement);
+  liElement.appendChild(checkmarkElement);
+  return liElement;
+}
+
+/** Delete every single comment with a checked checkbox */
+function deleteComments() {
+  // get all list elements with a checked checkbox
+  const checkedcheckboxes = document.querySelectorAll('input[name="checkbox"]:checked');
+  
+  checkedcheckboxes.forEach((checkbox) => {
+    deleteSingleComment(checkbox);
+  });
+}
+
+/** Delete comment by sending comment id with post request to server */
+function deleteSingleComment(checkbox) {
+  const params = new URLSearchParams();
+  params.append('id', checkbox.value);
+  fetch('/delete-data', {method: 'POST', body: params}).then(() => {
+    getComments();
+  });
+}
+

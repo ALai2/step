@@ -28,6 +28,16 @@
   );
 }
 
+#gryffindor-stripes {
+  background: repeating-linear-gradient(
+    45deg,
+    rgb(199, 29, 29),
+    rgb(199, 29, 29) 100px,
+    gold 100px,
+    gold 200px
+  );
+}
+
 #title {
   color: white;
   font-family: cursive;
@@ -107,4 +117,151 @@ img {
   font-family: 'Courier New', Courier, monospace;
   margin-bottom: 20px;
   padding: 15px 32px;
+  transition-duration: 0.4s;
 }
+
+.page-button:hover {
+  background: orange;
+  border: 5px solid cyan;
+  color: white;
+  padding: 20px 37px;
+}
+
+.comment {
+  cursor: pointer;
+  display: block;
+  font-size: 18px;
+  margin-bottom: 15px;
+  padding-left: 40px;
+  position: relative;
+  user-select: none;
+}
+
+.comment input {
+  cursor: pointer;
+  height: 0;
+  opacity: 0;
+  position: absolute;
+  width: 0;
+}
+
+/* Style checkmark box */
+.checkmark {
+  background-color: rgb(230, 211, 104);
+  border: 2px solid orange;
+  border-radius: 5px;
+  height: 25px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 25px;
+}
+
+.comment:hover input ~ .checkmark {
+  background-color: gold;
+}
+
+.comment input:checked ~ .checkmark {
+  background-color: gold;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  display: none;
+  position: absolute;
+}
+
+/* Show the checkmark when checked */
+.comment input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.comment .checkmark:after {
+  border: solid rgb(199, 29, 29);
+  border-width: 0 3px 3px 0;
+  height: 10px;
+  left: 9px;
+  top: 5px;
+  transform: rotate(45deg);
+  width: 5px;
+}
+
+#new-comment-section {
+  background-image: url("/images/VinesBackground.png");
+}
+
+.entry-box {
+  position: relative;
+}
+
+.entry-name {
+  display: block;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 20px;
+  padding-right: 10px;
+  position: absolute;
+  text-align: right;
+  top: 0;
+  width: 100px;
+}
+
+.text-box {
+  border: solid 5px gold;
+  border-radius: 15px;
+  display: inline-block;
+  margin-left: 115px;
+  padding: 10px;
+}
+
+.text-box:focus {
+  border: solid 5px red
+}
+
+#name-entry {
+  height: 40px;
+  width: 30%;
+}
+
+#comment-entry {
+  height: 200px;
+  width: 70%;
+}
+
+#comment-limit {
+  margin-left: 10px;
+}
+
+#language {
+  margin-left: 5px;
+  padding-top: 5px 15px;
+}
+
+#max-comments-text {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.comment-button {
+  background: cyan;
+  border: solid 2px orange;
+  border-radius: 5px;
+  font-family: 'Courier New', Courier, monospace;
+  margin-top: 10px;
+  padding: 5px 10px;
+  transition-duration: 0.4s;
+}
+
+.comment-button:hover {
+  background: gold;
+  border: solid 2px red;
+  color: rgb(6, 129, 6);
+  padding: 8px 16px;
+}
+
+#comment-submit-button {
+  left: 45%;
+  margin-bottom: 10px;
+  position: relative;
+} 
+
