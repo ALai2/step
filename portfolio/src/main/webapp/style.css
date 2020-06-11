@@ -18,6 +18,16 @@
   );
 }
 
+#slytherin-stripes {
+  background: repeating-linear-gradient(
+    45deg,
+    green,
+    green 100px,
+    silver 100px,
+    silver 200px
+  );
+}
+
 #gryffindor-stripes {
   background: repeating-linear-gradient(
     45deg,

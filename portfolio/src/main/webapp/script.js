@@ -35,6 +35,76 @@ function addRandomFact() {
   factContainer.innerText = fact; 
 }
 
+const SNAKE_SQUARE_SIZE = 30;
+var x = new Array(5);
+var y = new Array(5);
+
+function getCanvasAndContext() {
+  var canvas = document.getElementById('snakeCanvas'); // Get the canvas element by Id
+  var ctx = canvas.getContext('2d'); // Canvas 2d rendering context
+  return {
+    canvas: canvas,
+    ctx: ctx,
+  };
+}
+
+function initSnake() {
+  for (var z = 0; z < 5; z++) {
+    x[z] = 10;
+    y[z] = 10;
+  }
+  drawSnake();
+}
+	
+function drawSnake() {
+  var values = getCanvasAndContext();
+  var canvas = values.canvas;
+  var ctx = values.ctx;
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  for (var z = 0; z < 5; z++) {
+    ctx.beginPath();
+    ctx.rect(x[z], y[z], SNAKE_SQUARE_SIZE, SNAKE_SQUARE_SIZE);
+    ctx.fillStyle = "#ff0000";
+    ctx.fill();
+    ctx.closePath();
+  }
+}
+
+const LEFT_KEY = 37;
+const RIGHT_KEY = 39;
+const UP_KEY = 38;
+const DOWN_KEY = 40;
+
+const STEP_SNAKE = 20;
+
+// move snake inside the canvas using arrow keys
+window.onkeydown = function(event) {
+  for (var z = 4; z > 0; z--) {
+    x[z] = x[(z - 1)];
+    y[z] = y[(z - 1)];
+  }
+
+  var values = getCanvasAndContext();
+  var canvas = values.canvas;
+  
+  var keyPr = event.keyCode; // Key code of key pressed
+  
+  if(keyPr == RIGHT_KEY && x[0] <= canvas.width - 20 - STEP_SNAKE) { 
+    x[0] = x[0] + STEP_SNAKE;
+  } else if(keyPr == LEFT_KEY && x[0] > -10 + STEP_SNAKE) {
+    x[0] = x[0] - STEP_SNAKE; 
+  } else if(keyPr == UP_KEY && y[0] > -10 + STEP_SNAKE) {
+    y[0] = y[0] - STEP_SNAKE; 
+  } else if(keyPr == DOWN_KEY && y[0] <= canvas.height - 20 - STEP_SNAKE) {
+    y[0] = y[0] + STEP_SNAKE; 
+  }
+  
+  // Drawing snake at new position
+  drawSnake();
+};
+
 /**
  * Fetches comments from server and places it into message-container
  */
@@ -94,3 +164,4 @@ function deleteSingleComment(checkbox) {
     getComments();
   });
 }
+
