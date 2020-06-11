@@ -75,9 +75,9 @@ function drawSnake() {
     if (z == 0) {
       ctx.fillStyle = "#000000";
     } else if (z % 2 == 0) {
-      ctx.fillStyle = "#FF9900";
+      ctx.fillStyle = "#ff9900";
     } else {
-      ctx.fillStyle = "#FF0000";
+      ctx.fillStyle = "#ff0000";
     }
     ctx.fillRect(x[z], y[z], SNAKE_SQUARE_SIZE, SNAKE_SQUARE_SIZE);
     ctx.closePath();
@@ -95,7 +95,7 @@ const DOWN_KEY = 40;
 
 const STEP_SNAKE = 20;
 
-var keysPressed = {};
+var keysPressed = new Set();
 
 function gameLoop() {
   var values = getCanvasAndContext();
@@ -107,7 +107,7 @@ function gameLoop() {
       y[z] = y[(z - 1)];
     }
 
-    (Object.keys(keysPressed)).forEach(keyPr => moveSnake(keyPr));
+    keysPressed.forEach(keyPr => moveSnake(keyPr));
   
     // Drawing snake at new position
     drawSnake();
@@ -116,7 +116,10 @@ function gameLoop() {
   setTimeout(gameLoop, 50);
 }
 
-// move snake inside the canvas using arrow keys
+/** 
+  * move snake inside the canvas using arrow keys
+  * @param {number} keyPr The keycode of an arrow key being pressed by the user. 
+  */
 function moveSnake(keyPr) {
   var values = getCanvasAndContext();
   var canvas = values.canvas;
@@ -137,9 +140,7 @@ window.onkeydown = function(event) {
   var canvas = values.canvas;
   if (prevMousePressLoc == canvas) {
     event.preventDefault();
-  
-    var keyPr = event.keyCode; // Key code of key pressed
-    keysPressed[keyPr] = true;
+    keysPressed.add(event.keyCode);
   }
 };
 
@@ -147,6 +148,6 @@ window.onkeyup = function(event) {
   var values = getCanvasAndContext();
   var canvas = values.canvas;
   if (prevMousePressLoc == canvas) {
-    delete keysPressed[event.keyCode];
+    keysPressed.delete(event.keyCode);
   }
 };
