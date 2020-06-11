@@ -28,6 +28,7 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
+import com.google.cloud.translate.TranslateException;
 
 import com.google.cloud.language.v1.Document;
 import com.google.cloud.language.v1.LanguageServiceClient;
@@ -56,33 +57,42 @@ public class DataServlet extends HttpServlet {
     PreparedQuery results = datastore.prepare(query);
     List<Entity> queryList = results.asList(FetchOptions.Builder.withLimit(commentLimit));
 
-    Translate translate = null;
-    if (!languageCode.equals("original")) {
-      translate = TranslateOptions.getDefaultInstance().getService();
-    }
+    Translate translate = translate = TranslateOptions.getDefaultInstance().getService();
 
-    ArrayList<Comment> commentList = new ArrayList<Comment>();
-    for (Entity entity : queryList) {
-      long id = entity.getKey().getId();
-      String name = (String) entity.getProperty("name");
-      String comment = (String) entity.getProperty("comment");
-      long timestamp = (long) entity.getProperty("timestamp");
-      double score = (double) entity.getProperty("score");
+    try {
+      ArrayList<Comment> commentList = new ArrayList<Comment>();
+      for (Entity entity : queryList) {
+        long id = entity.getKey().getId();
+        String name = (String) entity.getProperty("name");
+        String comment = (String) entity.getProperty("comment");
+        long timestamp = (long) entity.getProperty("timestamp");
+        double score = (double) entity.getProperty("score");
 
-      // Do the translation.
-      if (!languageCode.equals("original")) {
-        Translation translation = translate.translate(comment, Translate.TranslateOption.targetLanguage(languageCode));
-        comment = translation.getTranslatedText();
+        // Do the translation.
+        if (!languageCode.equals("original")) {
+          Translation translation = translate.translate(comment, Translate.TranslateOption.targetLanguage(languageCode));
+          comment = translation.getTranslatedText();
+        }
+      
+        Comment commentObject = new Comment(id, name, comment, timestamp);
+        commentList.add(commentObject);
       }
-
-      Comment commentObject = new Comment(id, name, comment, timestamp, score);
-      commentList.add(commentObject);
-    }
     
-    Gson gson = new Gson();   
-    String json = gson.toJson(commentList);
-    response.setContentType("application/json; charset=utf-8");
-    response.getWriter().println(json);
+      Gson gson = new Gson();   
+      String json = gson.toJson(commentList);
+      response.setContentType("application/json; charset=utf-8");
+      response.getWriter().println(json);
+
+    } catch (TranslateException error) {
+      String errorMessage = "Error translating message";
+      HashMap<String, String> errorMap = new HashMap<>();
+      errorMap.put("error", errorMessage);
+      
+      Gson gson = new Gson();   
+      String json = gson.toJson(errorMap);
+      response.setContentType("application");
+      response.getWriter().println(json);
+    }
   }
 
   @Override

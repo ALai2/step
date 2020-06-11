@@ -1,21 +1,31 @@
-#hufflepuff_stripes {
-    background: repeating-linear-gradient(
-        45deg,
-        gold,
-        gold 100px,
-        black 100px,
-        black 200px
-    );
+#hufflepuff-stripes {
+  background: repeating-linear-gradient(
+    45deg,
+    gold,
+    gold 100px,
+    black 100px,
+    black 200px
+  );
 }
 
-#ravenclaw_stripes {
-    background: repeating-linear-gradient(
-        45deg,
-        rgb(52, 190, 236),
-        rgb(52, 190, 236) 100px,
-        rgba(143, 66, 22, 0.795) 100px,
-        rgba(143, 66, 22, 0.795) 200px
-    );
+#ravenclaw-stripes {
+  background: repeating-linear-gradient(
+    45deg,
+    rgb(52, 190, 236),
+    rgb(52, 190, 236) 100px,
+    rgba(143, 66, 22, 0.795) 100px,
+    rgba(143, 66, 22, 0.795) 200px
+  );
+}
+
+#slytherin-stripes {
+  background: repeating-linear-gradient(
+    45deg,
+    green,
+    green 100px,
+    silver 100px,
+    silver 200px
+  );
 }
 
 #gryffindor-stripes {
@@ -29,50 +39,75 @@
 }
 
 #title {
-    font-size: 60px; 
-    font-family: cursive;
-    color: white;
-    text-shadow: -2px 0 orange, 0 2px orange, 2px 0 orange, 0 -2px orange;
+  color: white;
+  font-family: cursive;
+  font-size: 60px; 
+  text-shadow: -2px 0 orange, 0 2px orange, 2px 0 orange, 0 -2px orange;
 }
 
-#content {
+.content {
   margin-left: auto;
   margin-right: auto;
   width: 800px;
 } 
 
 h2 {
-    font-family: cursive;
+  font-family: cursive;
 }
 
 #fact-container {
-  margin-top: auto;
   margin-bottom: auto;
+  margin-top: auto;
 }
 
-#images {
-    text-align: center;
+.images {
+  text-align: center;
 }
-#image_label {
-    display: inline-block;
-    margin-left: 40px;
-    font-family: 'Courier New', Courier, monospace;
+
+.image-label {
+  display: inline-block;
+  font-family: 'Courier New', Courier, monospace;
+  margin-left: 40px;
+}
+
+img {
+  width: 250px;
+}
+
+#profile-image {
+  background: cyan;
+  border: 5px solid orange;
+  border-radius: 15px;
+  margin-bottom: 25px;
+  margin-top: 25px;
+  padding: 25px 25px 25px 25px;
+  width: 300px;
 }
 
 .section {
-    background: white;
-    padding: 25px 25px 25px 25px;
-    border-radius: 15px;
-    margin-top: 25px;
-    margin-bottom: 25px;
-    border: 5px solid orange;
+  background: white;
+  border: 5px solid orange;
+  border-radius: 15px;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  padding: 25px 25px 25px 25px;
 }
 
-#fun_button {
-    border-radius: 10px;
-    background: cyan;
-    font-family: 'Courier New', Courier, monospace;
-    padding: 3px 7px;
+#bottom-section {
+  display:flex;
+}
+
+#link-section {
+  border-right: 5px solid orange;
+  margin-right: 25px;
+  padding-right: 25px;
+}
+
+#fun-button {
+  background: cyan;
+  border-radius: 10px;
+  font-family: 'Courier New', Courier, monospace;
+  padding: 3px 7px;
 }
 
 .page-button {
@@ -233,3 +268,4 @@ h2 {
   margin-bottom: 10px;
   position: relative;
 } 
+
