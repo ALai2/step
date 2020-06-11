@@ -91,13 +91,13 @@ window.onkeydown = function(event) {
   
   var keyPr = event.keyCode; // Key code of key pressed
   
-  if(keyPr == RIGHT_KEY && x[0] <= canvas.width - 40) { 
+  if(keyPr == RIGHT_KEY && x[0] <= canvas.width - 20 - STEP_SNAKE) { 
     x[0] = x[0] + STEP_SNAKE;
-  } else if(keyPr == LEFT_KEY && x[0] > 10) {
+  } else if(keyPr == LEFT_KEY && x[0] > -10 + STEP_SNAKE) {
     x[0] = x[0] - STEP_SNAKE; 
-  } else if(keyPr == UP_KEY && y[0] > 10) {
+  } else if(keyPr == UP_KEY && y[0] > -10 + STEP_SNAKE) {
     y[0] = y[0] - STEP_SNAKE; 
-  } else if(keyPr == DOWN_KEY && y[0] <= canvas.height - 40) {
+  } else if(keyPr == DOWN_KEY && y[0] <= canvas.height - 20 - STEP_SNAKE) {
     y[0] = y[0] + STEP_SNAKE; 
   }
   
