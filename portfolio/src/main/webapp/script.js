@@ -124,13 +124,13 @@ function moveSnake(keyPr) {
   var values = getCanvasAndContext();
   var canvas = values.canvas;
 
-  if(keyPr == RIGHT_KEY && x[0] <= canvas.width - 40) { 
+  if(keyPr == RIGHT_KEY && x[0] <= canvas.width - 20 - STEP_SNAKE) { 
     x[0] = x[0] + STEP_SNAKE;
-  } else if(keyPr == LEFT_KEY && x[0] > 10) {
+  } else if(keyPr == LEFT_KEY && x[0] > -10 + STEP_SNAKE) {
     x[0] = x[0] - STEP_SNAKE; 
-  } else if(keyPr == UP_KEY && y[0] > 10) {
+  } else if(keyPr == UP_KEY && y[0] > -10 + STEP_SNAKE) {
     y[0] = y[0] - STEP_SNAKE; 
-  } else if(keyPr == DOWN_KEY && y[0] <= canvas.height - 40) {
+  } else if(keyPr == DOWN_KEY && y[0] <= canvas.height - 20 - STEP_SNAKE) {
     y[0] = y[0] + STEP_SNAKE; 
   }
 }
@@ -151,3 +151,101 @@ window.onkeyup = function(event) {
     keysPressed.delete(event.keyCode);
   }
 };
+
+/**
+ * Fetches comments from server and places it into message-container
+ */
+function getComments() {
+  const commentLimit = document.getElementById("comment-limit").value;
+  const languageCode = document.getElementById('language').value;
+
+  if (commentLimit < 0) {
+    alert("Max number of comments must be at least 0");
+  } else {
+    fetch('/data?limit=' + commentLimit + '&languageCode=' + languageCode).then(response => response.json()).then((comments) => {
+      if (comments.error == null) {
+        const listElement = document.getElementById('comments');
+        listElement.innerHTML = "";
+        comments.forEach(comment => listElement.appendChild(createListElement(comment)));
+      } else {
+        alert(comments.error);
+      }
+    });
+  }
+}
+
+const BEAMING_FACE = "&#128513";
+const SMILING_FACE = "&#128578";
+const NEUTRAL_FACE = "&#128528";
+const FROWNING_FACE = "&#128577";
+const CRYING_FACE = "&#128546";
+
+/** Creates an <li> element containing text and a checkbox for deletion. */
+function createListElement(commentElement) {
+  const liElement = document.createElement('label');
+  liElement.innerHTML = commentElement.name + " says: " + commentElement.comment;
+  liElement.className = 'comment';
+
+  const deleteCheckboxElement = document.createElement('input');
+  deleteCheckboxElement.type = "checkbox";
+  deleteCheckboxElement.name = "checkbox";
+  deleteCheckboxElement.value = commentElement.id;
+
+  const checkmarkElement = document.createElement('span');
+  checkmarkElement.className = 'checkmark';
+
+  const sentimentElement = document.createElement('span');
+  sentimentElement.className = 'sentiment';
+  const score = commentElement.score;
+  if (score < -0.6) {
+    sentimentElement.innerHTML = CRYING_FACE;
+  } else if (score < -0.2) {
+    sentimentElement.innerHTML = FROWNING_FACE;
+  } else if (score < 0.2) {
+    sentimentElement.innerHTML = NEUTRAL_FACE;
+  } else if (score < 0.6) {
+    sentimentElement.innerHTML = SMILING_FACE;
+  } else {
+    sentimentElement.innerHTML = BEAMING_FACE;
+  }
+  
+  liElement.appendChild(deleteCheckboxElement);
+  liElement.appendChild(checkmarkElement);
+  liElement.appendChild(sentimentElement);
+  return liElement;
+}
+
+/** Delete every single comment with a checked checkbox */
+function deleteComments() {
+  // get all list elements with a checked checkbox
+  const checkedcheckboxes = document.querySelectorAll('input[name="checkbox"]:checked');
+  
+  checkedcheckboxes.forEach((checkbox) => {
+    deleteSingleComment(checkbox);
+  });
+}
+
+/** Delete comment by sending comment id with post request to server */
+function deleteSingleComment(checkbox) {
+  const params = new URLSearchParams();
+  params.append('id', checkbox.value);
+  fetch('/delete-data', {method: 'POST', body: params}).then(() => {
+    getComments();
+  });
+}
+
+function postComment() {
+  const name = document.getElementById('name-entry').value;
+  const comment = document.getElementById('comment-entry').value;
+
+  const params = new URLSearchParams();
+  params.append('name-input', name);
+  params.append('comment-input', comment);
+  fetch('/data', {method: 'POST', body: params}).then(response => response.json()).then((message) => {
+    if (message.error == null) {
+      getComments();
+    } else {
+      alert(message.error);
+    }
+  });
+}

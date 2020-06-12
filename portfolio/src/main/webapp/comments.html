@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Portfolio Comments</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+  </head>
+  <body onload="getComments()" id="gryffindor-stripes">
+    <div class="content">
+      <h1 id="title"><strong>Portfolio Comments</strong></h1>
+      <div class="section">
+        <h2>Comments</h2>
+        <span id="max-comments-text">Max number of comments shown </span>
+        <input type="number" class="text-box" id="comment-limit" value="10" min="0" onchange="getComments()">
+        <ul id="comments"></ul>
+        <button class="comment-button" onclick=deleteComments()>Delete Comments</button>
+        <br/><br/>
+        <button class="comment-button" onclick=getComments()>Translate All</button>
+        <select class="text-box" id="language">
+          <option value="original">Original</option>
+          <option value="en">English</option>
+          <option value="zh">Chinese</option>
+          <option value="es">Spanish</option>
+          <option value="hi">Hindi</option>
+          <option value="ar">Arabic</option>
+        </select>
+      </div>
+      <div class="section" id="new-comment-section">
+        <h2>New Comment</h2>
+        <form action="javascript:postComment()" method="POST">
+          <div class="entry-box">
+            <span class="entry-name">Name</span>
+            <textarea class="text-box" id="name-entry" required="true" placeholder="Place your name here..." name="name-input"></textarea>
+          </div>
+          <br/>
+          <div class="entry-box">
+            <span class="entry-name">Comment</span>
+            <textarea class="text-box" id="comment-entry" required="true" placeholder="Place your comment here..." name="comment-input"></textarea>
+          </div>
+          <input class="comment-button" id="comment-submit-button" type="submit" />
+        </form>
+      </div>
+      <button class="page-button" onclick="window.location.href='/index.html'"><strong>Back to Home!</strong></button>
+      <button class="page-button" onclick="window.location.href='/images.html'"><strong>Go to Gallery!</strong></button>
+    </div>
+  </body>
+</html>
