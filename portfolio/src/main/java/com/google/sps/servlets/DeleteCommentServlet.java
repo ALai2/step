@@ -16,6 +16,7 @@ package com.google.sps.servlets;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import java.io.IOException;
@@ -23,6 +24,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
+
+import com.google.gson.Gson;
+import org.json.simple.JSONObject;
 
 /** Servlet responsible for deleting comments. */
 @WebServlet("/delete-data")
@@ -35,6 +42,33 @@ public class DeleteCommentServlet extends HttpServlet {
 
     Key commentEntityKey = KeyFactory.createKey("Comment", id);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.delete(commentEntityKey);
+    
+    JSONObject responseMap = new JSONObject();
+    try {
+      Entity entity = datastore.get(commentEntityKey);
+      String userEmail = (String) entity.getProperty("userEmail");
+
+      UserService userService = UserServiceFactory.getUserService();
+      String currentUser = "";
+      if (userService.isUserLoggedIn()) {
+        currentUser = userService.getCurrentUser().getEmail();
+
+        if (currentUser.equals(userEmail)) {
+          datastore.delete(commentEntityKey);
+          responseMap.put("deleteStatus", true);
+        } else {
+          responseMap.put("deleteStatus", false);
+        }
+      } else {
+        responseMap.put("deleteStatus", false);
+      }
+    } catch (Exception error) {
+      responseMap.put("deleteStatus", false);
+    }
+
+    Gson gson = new Gson();   
+    String json = gson.toJson(responseMap);
+    response.setContentType("application/json");
+    response.getWriter().println(json);
   }
 }

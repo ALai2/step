@@ -34,6 +34,9 @@ import com.google.cloud.language.v1.Document;
 import com.google.cloud.language.v1.LanguageServiceClient;
 import com.google.cloud.language.v1.Sentiment;
 
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
+
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -41,7 +44,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.HashMap;
+import org.json.simple.JSONObject;
 
 /** Servlet that returns and saves comments in Datastore */
 @WebServlet("/data")
@@ -59,14 +62,21 @@ public class DataServlet extends HttpServlet {
 
     Translate translate = translate = TranslateOptions.getDefaultInstance().getService();
 
+    UserService userService = UserServiceFactory.getUserService();
+    String currentUser = "";
+    if (userService.isUserLoggedIn()) {
+      currentUser = userService.getCurrentUser().getEmail();
+    } 
+
     try {
-      ArrayList<Comment> commentList = new ArrayList<Comment>();
+      ArrayList<JSONObject> commentList = new ArrayList<JSONObject>();
       for (Entity entity : queryList) {
         long id = entity.getKey().getId();
         String name = (String) entity.getProperty("name");
         String comment = (String) entity.getProperty("comment");
         long timestamp = (long) entity.getProperty("timestamp");
         double score = (double) entity.getProperty("score");
+        String userEmail = (String) entity.getProperty("userEmail");
 
         // Do the translation.
         if (!languageCode.equals("original")) {
@@ -74,10 +84,19 @@ public class DataServlet extends HttpServlet {
           comment = translation.getTranslatedText();
         }
       
-        Comment commentObject = new Comment(id, name, comment, timestamp, score);
-        commentList.add(commentObject);
+        Comment commentObject = new Comment(id, name, comment, timestamp, score, userEmail);
+      
+        JSONObject commentJson = new JSONObject();
+        commentJson.put("comment", commentObject);
+        if (currentUser.equals(userEmail)) {
+          commentJson.put("delete", true);
+        } else {
+          commentJson.put("delete", false);
+        }
+
+        commentList.add(commentJson);
       }
-    
+      
       Gson gson = new Gson();   
       String json = gson.toJson(commentList);
       response.setContentType("application/json; charset=utf-8");
@@ -85,8 +104,8 @@ public class DataServlet extends HttpServlet {
 
     } catch (TranslateException error) {
       String errorMessage = "Error translating message";
-      HashMap<String, String> errorMap = new HashMap<>();
-      errorMap.put("error", errorMessage);
+      JSONObject responseMap = new JSONObject();
+      responseMap.put("error", errorMessage);
       
       Gson gson = new Gson();   
       String json = gson.toJson(errorMap);
@@ -97,39 +116,46 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Get the input from the form.
-    String name = request.getParameter("name-input");
-    String comment = request.getParameter("comment-input");
-    long timestamp = System.currentTimeMillis();
+    JSONObject responseMap = new JSONObject();
+    
+    UserService userService = UserServiceFactory.getUserService();
+    if (!userService.isUserLoggedIn()) {
+      String errorMessage = "User needs to login to post comment";
+      responseMap.put("error", errorMessage);
+    } else {
+      String userEmail = userService.getCurrentUser().getEmail();
 
-    try {
-      Document doc = Document.newBuilder().setContent(comment).setType(Document.Type.PLAIN_TEXT).build();
-      LanguageServiceClient languageService = LanguageServiceClient.create();
-      Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
-      double score = sentiment.getScore();
-      languageService.close();
+      // Get the input from the form.
+      String name = request.getParameter("name-input");
+      String comment = request.getParameter("comment-input");
+      long timestamp = System.currentTimeMillis();
 
-      Entity commentEntity = new Entity("Comment");
-      commentEntity.setProperty("name", name);
-      commentEntity.setProperty("comment", comment);
-      commentEntity.setProperty("timestamp", timestamp);
-      commentEntity.setProperty("score", score);
+      try {
+        Document doc = Document.newBuilder().setContent(comment).setType(Document.Type.PLAIN_TEXT).build();
+        LanguageServiceClient languageService = LanguageServiceClient.create();
+        Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+        double score = sentiment.getScore();
+        languageService.close();
 
-      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-      datastore.put(commentEntity);
+        Entity commentEntity = new Entity("Comment");
+        commentEntity.setProperty("name", name);
+        commentEntity.setProperty("comment", comment);
+        commentEntity.setProperty("timestamp", timestamp);
+        commentEntity.setProperty("score", score);
+        commentEntity.setProperty("userEmail", userEmail);
 
-      // Redirect back to the Comment page.
-      response.sendRedirect("/comments.html");
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        datastore.put(commentEntity);
 
-    } catch (Exception error) {
-      String errorMessage = "Error analyzing sentiment";
-      HashMap<String, String> errorMap = new HashMap<>();
-      errorMap.put("error", errorMessage);
-
-      Gson gson = new Gson();   
-      String json = gson.toJson(errorMap);
-      response.setContentType("application");
-      response.getWriter().println(json);
+      } catch (Exception error) {
+        String errorMessage = "Error analyzing sentiment";
+        responseMap.put("error", errorMessage);
+      }
     }
+    
+    Gson gson = new Gson();   
+    String json = gson.toJson(responseMap);
+    response.setContentType("application/json");
+    response.getWriter().println(json);
   }
 }

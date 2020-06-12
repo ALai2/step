@@ -167,6 +167,17 @@ img {
   width: 25px;
 }
 
+.disabled-checkmark {
+  background-color: grey;
+  border: 2px solid black;
+  border-radius: 5px;
+  height: 25px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 25px;
+}
+
 .comment:hover input ~ .checkmark {
   background-color: gold;
 }
@@ -260,9 +271,11 @@ img {
   background: cyan;
   border: solid 2px orange;
   border-radius: 5px;
+  color: black;
   font-family: 'Courier New', Courier, monospace;
   margin-top: 10px;
   padding: 5px 10px;
+  text-decoration: none;
   transition-duration: 0.4s;
 }
 
@@ -278,3 +291,16 @@ img {
   margin-bottom: 10px;
   position: relative;
 } 
+
+.login-button {
+  border: solid 5px gold;
+  border-radius: 15px;
+  display: inline-block;
+  padding: 10px;
+}
+
+.login-section-text {
+  display: inline-block;
+  font-size: 20px;
+  margin-left: 15px;
+}

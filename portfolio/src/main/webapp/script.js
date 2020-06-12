@@ -181,7 +181,9 @@ const FROWNING_FACE = "&#128577";
 const CRYING_FACE = "&#128546";
 
 /** Creates an <li> element containing text and a checkbox for deletion. */
-function createListElement(commentElement) {
+function createListElement(commentObject) {
+  const commentElement = commentObject.comment;
+
   const liElement = document.createElement('label');
   liElement.innerHTML = commentElement.name + " says: " + commentElement.comment;
   liElement.className = 'comment';
@@ -208,6 +210,11 @@ function createListElement(commentElement) {
   } else {
     sentimentElement.innerHTML = BEAMING_FACE;
   }
+
+  if (!commentObject.delete) {
+    deleteCheckboxElement.disabled = true;
+    checkmarkElement.className = 'disabled-checkmark';
+  }
   
   liElement.appendChild(deleteCheckboxElement);
   liElement.appendChild(checkmarkElement);
@@ -229,23 +236,79 @@ function deleteComments() {
 function deleteSingleComment(checkbox) {
   const params = new URLSearchParams();
   params.append('id', checkbox.value);
-  fetch('/delete-data', {method: 'POST', body: params}).then(() => {
-    getComments();
+  fetch('/delete-data', {method: 'POST', body: params}).then(response => response.json()).then((message) => {
+    if (message.deleteStatus) {
+      getComments();
+    } else {
+      alert("Error deleting comment");
+    }
   });
 }
 
 function postComment() {
-  const name = document.getElementById('name-entry').value;
-  const comment = document.getElementById('comment-entry').value;
+  const name = document.getElementById('name-entry');
+  const comment = document.getElementById('comment-entry');
 
   const params = new URLSearchParams();
-  params.append('name-input', name);
-  params.append('comment-input', comment);
+  params.append('name-input', name.value);
+  params.append('comment-input', comment.value);
   fetch('/data', {method: 'POST', body: params}).then(response => response.json()).then((message) => {
     if (message.error == null) {
       getComments();
+
+      // show user that comment was posted
+      window.scrollTo(0,0);
+      name.value = "";
+      comment.value = "";
     } else {
       alert(message.error);
     }
   });
+}
+
+/**
+  * Checks with server if user has logged in.
+  * Display corresponding text and url in login section if login is true/false.
+  */
+function getLoginStatus() {
+  fetch('/user').then(response => response.json()).then((userInfo) => {
+    const loginStatusElement = document.getElementById('login-section');
+    loginStatusElement.innerHTML = "";
+
+    const commentSectionElement = document.getElementById("new-comment-section");
+
+    if (userInfo.isLoggedIn) {
+      const logoutElement = document.createElement('a');
+      logoutElement.innerHTML = "Logout";
+      logoutElement.href = userInfo.logoutUrl;
+      logoutElement.className = "comment-button";
+
+      const emailElement = document.createElement('p');
+      emailElement.innerHTML = "Welcome, <strong>" + userInfo.email + "</strong>! Now you can post and delete comments!";
+      emailElement.className = "login-section-text";
+
+      loginStatusElement.appendChild(logoutElement);
+      loginStatusElement.appendChild(emailElement);
+
+      commentSectionElement.style.display = "block";
+      
+    } else {
+      const loginElement = document.createElement('a');
+      loginElement.innerHTML = "Login";
+      loginElement.href = userInfo.loginUrl;
+      loginElement.className = "comment-button";
+
+      const textElement = document.createElement('p');
+      textElement.innerHTML = "Sign in to post and delete comments!";
+      textElement.className = "login-section-text";
+
+      loginStatusElement.appendChild(loginElement);
+      loginStatusElement.appendChild(textElement);
+
+      commentSectionElement.style.display = "none";
+    }
+
+    getComments();
+  });
+
 }
