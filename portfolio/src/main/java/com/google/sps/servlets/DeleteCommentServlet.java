@@ -52,11 +52,13 @@ public class DeleteCommentServlet extends HttpServlet {
       String currentUser = "";
       if (userService.isUserLoggedIn()) {
         currentUser = userService.getCurrentUser().getEmail();
-      } 
 
-      if (currentUser.equals(userEmail)) {
-        datastore.delete(commentEntityKey);
-        responseMap.put("deleteStatus", true);
+        if (currentUser.equals(userEmail)) {
+          datastore.delete(commentEntityKey);
+          responseMap.put("deleteStatus", true);
+        } else {
+          responseMap.put("deleteStatus", false);
+        }
       } else {
         responseMap.put("deleteStatus", false);
       }

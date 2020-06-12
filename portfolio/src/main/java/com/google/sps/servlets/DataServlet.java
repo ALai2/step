@@ -87,15 +87,15 @@ public class DataServlet extends HttpServlet {
 
       Comment commentObject = new Comment(id, name, comment, timestamp, score, userEmail);
       
-      JSONObject responseMap = new JSONObject();
-      responseMap.put("comment", commentObject);
+      JSONObject commentJson = new JSONObject();
+      commentJson.put("comment", commentObject);
       if (currentUser.equals(userEmail)) {
-        responseMap.put("delete", true);
+        commentJson.put("delete", true);
       } else {
-        responseMap.put("delete", false);
+        commentJson.put("delete", false);
       }
 
-      commentList.add(responseMap);
+      commentList.add(commentJson);
     }
     
     Gson gson = new Gson();   
