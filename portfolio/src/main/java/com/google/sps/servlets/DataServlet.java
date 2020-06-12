@@ -28,6 +28,7 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
+import com.google.cloud.translate.TranslateException;
 
 import com.google.cloud.language.v1.Document;
 import com.google.cloud.language.v1.LanguageServiceClient;
@@ -59,10 +60,7 @@ public class DataServlet extends HttpServlet {
     PreparedQuery results = datastore.prepare(query);
     List<Entity> queryList = results.asList(FetchOptions.Builder.withLimit(commentLimit));
 
-    Translate translate = null;
-    if (!languageCode.equals("original")) {
-      translate = TranslateOptions.getDefaultInstance().getService();
-    }
+    Translate translate = translate = TranslateOptions.getDefaultInstance().getService();
 
     UserService userService = UserServiceFactory.getUserService();
     String currentUser = "";
@@ -70,38 +68,50 @@ public class DataServlet extends HttpServlet {
       currentUser = userService.getCurrentUser().getEmail();
     } 
 
-    ArrayList<JSONObject> commentList = new ArrayList<JSONObject>();
-    for (Entity entity : queryList) {
-      long id = entity.getKey().getId();
-      String name = (String) entity.getProperty("name");
-      String comment = (String) entity.getProperty("comment");
-      long timestamp = (long) entity.getProperty("timestamp");
-      double score = (double) entity.getProperty("score");
-      String userEmail = (String) entity.getProperty("userEmail");
+    try {
+      ArrayList<JSONObject> commentList = new ArrayList<JSONObject>();
+      for (Entity entity : queryList) {
+        long id = entity.getKey().getId();
+        String name = (String) entity.getProperty("name");
+        String comment = (String) entity.getProperty("comment");
+        long timestamp = (long) entity.getProperty("timestamp");
+        double score = (double) entity.getProperty("score");
+        String userEmail = (String) entity.getProperty("userEmail");
 
-      // Do the translation.
-      if (!languageCode.equals("original")) {
-        Translation translation = translate.translate(comment, Translate.TranslateOption.targetLanguage(languageCode));
-        comment = translation.getTranslatedText();
-      }
-
-      Comment commentObject = new Comment(id, name, comment, timestamp, score, userEmail);
+        // Do the translation.
+        if (!languageCode.equals("original")) {
+          Translation translation = translate.translate(comment, Translate.TranslateOption.targetLanguage(languageCode));
+          comment = translation.getTranslatedText();
+        }
       
-      JSONObject commentJson = new JSONObject();
-      commentJson.put("comment", commentObject);
-      if (currentUser.equals(userEmail)) {
-        commentJson.put("delete", true);
-      } else {
-        commentJson.put("delete", false);
-      }
+        Comment commentObject = new Comment(id, name, comment, timestamp, score, userEmail);
+      
+        JSONObject commentJson = new JSONObject();
+        commentJson.put("comment", commentObject);
+        if (currentUser.equals(userEmail)) {
+          commentJson.put("delete", true);
+        } else {
+          commentJson.put("delete", false);
+        }
 
-      commentList.add(commentJson);
+        commentList.add(commentJson);
+      }
+      
+      Gson gson = new Gson();   
+      String json = gson.toJson(commentList);
+      response.setContentType("application/json; charset=utf-8");
+      response.getWriter().println(json);
+
+    } catch (TranslateException error) {
+      String errorMessage = "Error translating message";
+      JSONObject responseMap = new JSONObject();
+      responseMap.put("error", errorMessage);
+      
+      Gson gson = new Gson();   
+      String json = gson.toJson(errorMap);
+      response.setContentType("application");
+      response.getWriter().println(json);
     }
-    
-    Gson gson = new Gson();   
-    String json = gson.toJson(commentList);
-    response.setContentType("application/json; charset=utf-8");
-    response.getWriter().println(json);
   }
 
   @Override
