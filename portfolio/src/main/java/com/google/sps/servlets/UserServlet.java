@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.util.HashMap;
+import org.json.simple.JSONObject;
 import com.google.gson.Gson;
 
 @WebServlet("/user")
@@ -31,7 +31,7 @@ public class UserServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
-    HashMap<String, String> responseMap = new HashMap<>();
+    JSONObject responseMap = new JSONObject();
 
     UserService userService = UserServiceFactory.getUserService();
     if (userService.isUserLoggedIn()) {
@@ -40,13 +40,13 @@ public class UserServlet extends HttpServlet {
       String logoutUrl = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
       
       responseMap.put("email", userEmail);
-      responseMap.put("isLoggedIn", "true");
+      responseMap.put("isLoggedIn", true);
       responseMap.put("logoutUrl", logoutUrl);
     } else {
       String urlToRedirectToAfterUserLogsIn = "/comments.html";
       String loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
 
-      responseMap.put("isLoggedIn", "false");
+      responseMap.put("isLoggedIn", false);
       responseMap.put("loginUrl", loginUrl);
     }
 

@@ -27,13 +27,13 @@ public class Comment {
   private String userEmail;
 
   /**
-    * @param {id} The unique id of the comment.
-    * @param {name} The name of the user that the comment belongs to.
-    * @param {comment} The comment that the user posts.
-    * @param {timestamp} When the comment was posted.
-    * @param {score} The sentiment score analyzed from the comment by google NLP API.
+    * @param id The unique id of the comment.
+    * @param name The name of the user that the comment belongs to.
+    * @param comment The comment that the user posts.
+    * @param timestamp When the comment was posted.
+    * @param score The sentiment score analyzed from the comment by google NLP API.
     *       - Valid range: [-1 to 1], -1 is most negative emotion and 1 is most positive emotion
-    * @param {userEmail} The email of the user
+    * @param userEmail The email of the user
     */
   public Comment(long id, String name, String comment, long timestamp, double score, String userEmail) {
     this.id = id;

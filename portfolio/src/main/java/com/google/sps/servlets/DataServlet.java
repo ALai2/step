@@ -43,7 +43,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.HashMap;
+import org.json.simple.JSONObject;
 
 /** Servlet that returns and saves comments in Datastore */
 @WebServlet("/data")
@@ -64,7 +64,13 @@ public class DataServlet extends HttpServlet {
       translate = TranslateOptions.getDefaultInstance().getService();
     }
 
-    ArrayList<Comment> commentList = new ArrayList<Comment>();
+    UserService userService = UserServiceFactory.getUserService();
+    String currentUser = "";
+    if (userService.isUserLoggedIn()) {
+      currentUser = userService.getCurrentUser().getEmail();
+    } 
+
+    ArrayList<JSONObject> commentList = new ArrayList<JSONObject>();
     for (Entity entity : queryList) {
       long id = entity.getKey().getId();
       String name = (String) entity.getProperty("name");
@@ -80,7 +86,16 @@ public class DataServlet extends HttpServlet {
       }
 
       Comment commentObject = new Comment(id, name, comment, timestamp, score, userEmail);
-      commentList.add(commentObject);
+      
+      JSONObject responseMap = new JSONObject();
+      responseMap.put("comment", commentObject);
+      if (currentUser.equals(userEmail)) {
+        responseMap.put("delete", true);
+      } else {
+        responseMap.put("delete", false);
+      }
+
+      commentList.add(responseMap);
     }
     
     Gson gson = new Gson();   
@@ -91,12 +106,12 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    HashMap<String, String> errorMap = new HashMap<>();
+    JSONObject responseMap = new JSONObject();
     
     UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
       String errorMessage = "User needs to login to post comment";
-      errorMap.put("error", errorMessage);
+      responseMap.put("error", errorMessage);
     } else {
       String userEmail = userService.getCurrentUser().getEmail();
 
@@ -124,12 +139,12 @@ public class DataServlet extends HttpServlet {
 
       } catch (Exception error) {
         String errorMessage = "Error analyzing sentiment";
-        errorMap.put("error", errorMessage);
+        responseMap.put("error", errorMessage);
       }
     }
     
     Gson gson = new Gson();   
-    String json = gson.toJson(errorMap);
+    String json = gson.toJson(responseMap);
     response.setContentType("application/json");
     response.getWriter().println(json);
   }

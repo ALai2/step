@@ -30,8 +30,6 @@ function addRandomFact() {
   factContainer.innerText = fact; 
 }
 
-var userEmail;
-
 /**
  * Fetches comments from server and places it into message-container
  */
@@ -42,10 +40,10 @@ function getComments() {
   if (commentLimit < 0) {
     alert("Max number of comments must be at least 0");
   } else {
-    fetch('/data?limit=' + commentLimit + '&languageCode=' + languageCode).then(response => response.json()).then((comments) => {
+    fetch('/data?limit=' + commentLimit + '&languageCode=' + languageCode).then(response => response.json()).then((commentList) => {
       const listElement = document.getElementById('comments');
       listElement.innerHTML = "";
-      comments.forEach(comment => listElement.appendChild(createListElement(comment)));
+      commentList.forEach(commentObject => listElement.appendChild(createListElement(commentObject)));
     });
   }
 }
@@ -57,7 +55,9 @@ const FROWNING_FACE = "&#128577";
 const CRYING_FACE = "&#128546";
 
 /** Creates an <li> element containing text and a checkbox for deletion. */
-function createListElement(commentElement) {
+function createListElement(commentObject) {
+  const commentElement = commentObject.comment;
+
   const liElement = document.createElement('label');
   liElement.innerHTML = commentElement.name + " says: " + commentElement.comment;
   liElement.className = 'comment';
@@ -85,7 +85,7 @@ function createListElement(commentElement) {
     sentimentElement.innerHTML = BEAMING_FACE;
   }
 
-  if (userEmail != commentElement.userEmail) {
+  if (!commentObject.delete) {
     deleteCheckboxElement.disabled = true;
     checkmarkElement.className = 'disabled-checkmark';
   }
@@ -110,8 +110,12 @@ function deleteComments() {
 function deleteSingleComment(checkbox) {
   const params = new URLSearchParams();
   params.append('id', checkbox.value);
-  fetch('/delete-data', {method: 'POST', body: params}).then(() => {
-    getComments();
+  fetch('/delete-data', {method: 'POST', body: params}).then(response => response.json()).then((message) => {
+    if (message.deleteStatus) {
+      getComments();
+    } else {
+      alert("Error deleting comment");
+    }
   });
 }
 
@@ -147,7 +151,7 @@ function getLoginStatus() {
 
     const commentSectionElement = document.getElementById("new-comment-section");
 
-    if (userInfo.isLoggedIn == "true") {
+    if (userInfo.isLoggedIn) {
       const logoutElement = document.createElement('a');
       logoutElement.innerHTML = "Logout";
       logoutElement.href = userInfo.logoutUrl;
@@ -156,7 +160,6 @@ function getLoginStatus() {
       const emailElement = document.createElement('p');
       emailElement.innerHTML = "Welcome, <strong>" + userInfo.email + "</strong>! Now you can post and delete comments!";
       emailElement.className = "login-section-text";
-      userEmail = userInfo.email;
 
       loginStatusElement.appendChild(logoutElement);
       loginStatusElement.appendChild(emailElement);
@@ -176,10 +179,10 @@ function getLoginStatus() {
       loginStatusElement.appendChild(loginElement);
       loginStatusElement.appendChild(textElement);
 
-      userEmail = null;
       commentSectionElement.style.display = "none";
     }
+
+    getComments();
   });
 
-  getComments();
 }
