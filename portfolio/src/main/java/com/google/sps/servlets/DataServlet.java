@@ -74,7 +74,7 @@ public class DataServlet extends HttpServlet {
           comment = translation.getTranslatedText();
         }
       
-        Comment commentObject = new Comment(id, name, comment, timestamp);
+        Comment commentObject = new Comment(id, name, comment, timestamp, score);
         commentList.add(commentObject);
       }
     

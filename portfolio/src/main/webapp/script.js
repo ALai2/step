@@ -42,7 +42,7 @@ var y = new Array(5);
 var prevMousePressLoc;
 
 function getCanvasAndContext() {
-  var canvas = document.getElementById('snakeCanvas'); // Get the canvas element by Id
+  var canvas = document.getElementById('snake-canvas'); // Get the canvas element by Id
   var ctx = canvas.getContext('2d'); // Canvas 2d rendering context
   return {
     canvas: canvas,
@@ -124,13 +124,13 @@ function moveSnake(keyPr) {
   var values = getCanvasAndContext();
   var canvas = values.canvas;
 
-  if(keyPr == RIGHT_KEY && x[0] <= canvas.width - 20 - STEP_SNAKE) { 
+  if(keyPr == RIGHT_KEY && x[0] <= canvas.width - STEP_SNAKE - SNAKE_SQUARE_SIZE) { 
     x[0] = x[0] + STEP_SNAKE;
-  } else if(keyPr == LEFT_KEY && x[0] > -10 + STEP_SNAKE) {
+  } else if(keyPr == LEFT_KEY && x[0] >= STEP_SNAKE) {
     x[0] = x[0] - STEP_SNAKE; 
-  } else if(keyPr == UP_KEY && y[0] > -10 + STEP_SNAKE) {
+  } else if(keyPr == UP_KEY && y[0] >= STEP_SNAKE) {
     y[0] = y[0] - STEP_SNAKE; 
-  } else if(keyPr == DOWN_KEY && y[0] <= canvas.height - 20 - STEP_SNAKE) {
+  } else if(keyPr == DOWN_KEY && y[0] <= canvas.height - STEP_SNAKE - SNAKE_SQUARE_SIZE) {
     y[0] = y[0] + STEP_SNAKE; 
   }
 }
