@@ -108,7 +108,7 @@ public class DataServlet extends HttpServlet {
       responseMap.put("error", errorMessage);
       
       Gson gson = new Gson();   
-      String json = gson.toJson(errorMap);
+      String json = gson.toJson(responseMap);
       response.setContentType("application");
       response.getWriter().println(json);
     }
