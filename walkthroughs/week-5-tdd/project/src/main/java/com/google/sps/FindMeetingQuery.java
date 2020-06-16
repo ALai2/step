@@ -27,19 +27,12 @@ public final class FindMeetingQuery {
     // iterate through events and get timeranges of events that attendees are in
     ArrayList<TimeRange> outOfRange = new ArrayList<TimeRange>();
     for (Event event: events) {
-      boolean addEvent = false;
-
       Set<String> eventAttendees = event.getAttendees();
       for (String attendee: attendees) {
         if (eventAttendees.contains(attendee)) {
-          addEvent = true;
+          outOfRange.add(event.getWhen());
           break;
         }
-      }
-      
-      // add event if at least one of the attendees attend this event
-      if (addEvent) {
-        outOfRange.add(event.getWhen());
       }
     }
 
