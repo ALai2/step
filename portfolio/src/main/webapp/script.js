@@ -101,7 +101,7 @@ function gameLoop() {
   var values = getCanvasAndContext();
   var canvas = values.canvas;
 
-  if (prevMousePressLoc == canvas) {
+  if (prevMousePressLoc == canvas && keysPressed.size > 0) {
     for (var z = SNAKE_LENGTH - 1; z > 0; z--) {
       x[z] = x[(z - 1)];
       y[z] = y[(z - 1)];
