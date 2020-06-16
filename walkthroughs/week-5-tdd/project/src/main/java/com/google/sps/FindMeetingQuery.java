@@ -15,9 +15,50 @@
 package com.google.sps;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
+import java.util.ArrayList;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    throw new UnsupportedOperationException("TODO: Implement this method.");
+    // get mandatory attendees of meeting request
+    Collection<String> attendees = request.getAttendees();
+
+    // iterate through events and get timeranges of events that attendees are in
+    ArrayList<TimeRange> outOfRange = new ArrayList<TimeRange>();
+    for (Event event: events) {
+      Set<String> eventAttendees = event.getAttendees();
+      for (String attendee: attendees) {
+        if (eventAttendees.contains(attendee)) {
+          outOfRange.add(event.getWhen());
+          break;
+        }
+      }
+    }
+
+    // sort events by start time 
+    Collections.sort(outOfRange, TimeRange.ORDER_BY_START);
+
+    // iterate through and add timeranges to collection of available times
+    Collection<TimeRange> availableTimes = new ArrayList<>();
+    
+    int startPointer = TimeRange.START_OF_DAY;
+    for (TimeRange eventTime: outOfRange) {
+      if (!eventTime.contains(startPointer) && eventTime.start() - startPointer >= request.getDuration()) {
+        // create TimeRange and add to output collection
+        availableTimes.add(TimeRange.fromStartEnd(startPointer, eventTime.start(), false));
+      }
+      // prevent startPointer from moving back due to nested events
+      if (eventTime.end() > startPointer) {
+        startPointer = eventTime.end();
+      }
+    }
+
+    // check END_OF_DAY time slot
+    if (TimeRange.END_OF_DAY - startPointer >= request.getDuration()) {
+      availableTimes.add(TimeRange.fromStartEnd(startPointer, TimeRange.END_OF_DAY, true));
+    }
+
+    return availableTimes;
   }
 }
