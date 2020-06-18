@@ -125,8 +125,8 @@ public final class FindMeetingQueryTest {
 
   @Test
   public void everyAttendeeIsConsideredExceptOptional() {
-    // Have each person have different events. We should see three options because each person has
-    // split the restricted times.
+    // Have two mandatory people PERSON_A and PERSON_B with two different events.
+    // Optional attendee Person_C is busy the entire day and should be ignored when choosing available times.
     //
     // Events  : |--------------C--------------|
     //                 |--A--|     |--B--|
@@ -155,8 +155,8 @@ public final class FindMeetingQueryTest {
 
   @Test
   public void everyAttendeeIsConsideredWithOptional() {
-    // Have each person have different events. We should see two options because each person has
-    // split the restricted times.
+    // Have each person have different events, PERSON_A and PERSON_B are mandatory while PERSON_C is optional.
+    // We should see two options because each person has split the restricted times.
     //
     // Events  :       |--A--|--C--|--B--|
     // Day     : |-----------------------------|
@@ -285,8 +285,9 @@ public final class FindMeetingQueryTest {
 
   @Test
   public void justEnoughRoomExceptOptional() {
-    // Have one person with optional person, but make it so that there is just enough room at one point in the day to
-    // have the meeting.
+    // Have one mandatory person with one optional person, but make it so that there is 
+    // not enough room for the optional person to participate but just enough room at one point in the day to
+    // have the meeting for the mandatory person.
     //
     // Events  : |--A--|-B|  |----A----|
     // Day     : |---------------------|
@@ -385,7 +386,7 @@ public final class FindMeetingQueryTest {
 
   @Test
   public void noMandatoryJustOptionalNoGaps() {
-    // Have one person, but make it so that there is not enough room at any point in the day to
+    // Have two optional attendees, but make it so that there is not enough room at any point in the day to
     // have the meeting.
     //
     // Events  : |--A-----| |-----B----|
