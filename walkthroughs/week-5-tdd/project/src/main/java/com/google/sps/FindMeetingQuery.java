@@ -66,7 +66,7 @@ public final class FindMeetingQuery {
       availableTimes.add(TimeRange.fromStartEnd(startPointer, TimeRange.END_OF_DAY, true));
     }
 
-    Collection<TimeRange> optionalAvailableTimes = new ArrayList<>();
+    Collection<TimeRange> optionalTimesRequest = new ArrayList<>();
     if (request.getOptionalAttendees().size() > 0) {
       // get available times for optional attendees
       MeetingRequest requestOptionalTimes = new MeetingRequest(request.getOptionalAttendees(), request.getDuration());
@@ -80,25 +80,27 @@ public final class FindMeetingQuery {
           TimeRange currentAvailableTime = availableTimes.get(i);
 
           if (optionalTime.contains(currentAvailableTime)) {
-            optionalAvailableTimes.add(currentAvailableTime);
+            optionalTimesRequest.add(currentAvailableTime);
           } else if (currentAvailableTime.contains(optionalTime)) {
-            optionalAvailableTimes.add(optionalTime);
+            optionalTimesRequest.add(optionalTime);
             break; // move on to next optional time
           } else if (optionalTime.overlaps(currentAvailableTime)) {
             if (optionalTime.start() - currentAvailableTime.end() >= request.getDuration()) {
-              optionalAvailableTimes.add(TimeRange.fromStartEnd(optionalTime.start(), currentAvailableTime.end(), false));
+              optionalTimesRequest.add(TimeRange.fromStartEnd(optionalTime.start(), currentAvailableTime.end(), false));
             } else if (currentAvailableTime.start() - optionalTime.end() >= request.getDuration()) {
-              optionalAvailableTimes.add(TimeRange.fromStartEnd(currentAvailableTime.start(), optionalTime.end(), false));
+              optionalTimesRequest.add(TimeRange.fromStartEnd(currentAvailableTime.start(), optionalTime.end(), false));
               break;
             }
+          } else if (optionalTime.start() > currentAvailableTime.start()) {
+            break;
           }
         }
       }
     }
     
     // check which list of timeranges is to be returned
-    if (optionalAvailableTimes.size() > 0 || (request.getAttendees().size() == 0 && request.getOptionalAttendees().size() > 0)) {
-      return optionalAvailableTimes;
+    if (optionalTimesRequest.size() > 0 || (request.getAttendees().size() == 0 && request.getOptionalAttendees().size() > 0)) {
+      return optionalTimesRequest;
     } else {
       return availableTimes;
     }

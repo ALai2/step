@@ -47,7 +47,7 @@ public final class MeetingRequest {
    */
   public Collection<String> getOptionalAttendees() {
     if (optional_attendees == null) {
-      return Collections.unmodifiableCollection(new HashSet<>());
+      return Collections.emptySet();
     }
     return Collections.unmodifiableCollection(optional_attendees);
   }
