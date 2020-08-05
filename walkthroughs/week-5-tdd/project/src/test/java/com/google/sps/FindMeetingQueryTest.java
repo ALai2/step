@@ -43,6 +43,7 @@ public final class FindMeetingQueryTest {
   private static final int TIME_0930AM = TimeRange.getTimeInMinutes(9, 30);
   private static final int TIME_1000AM = TimeRange.getTimeInMinutes(10, 0);
   private static final int TIME_1100AM = TimeRange.getTimeInMinutes(11, 00);
+  private static final int TIME_1130PM = TimeRange.getTimeInMinutes(23, 30);
 
   private static final int DURATION_15_MINUTES = 15;
   private static final int DURATION_30_MINUTES = 30;
@@ -405,6 +406,80 @@ public final class FindMeetingQueryTest {
 
     Collection<TimeRange> actual = query.query(events, request);
     Collection<TimeRange> expected = Arrays.asList();
+
+    Assert.assertEquals(expected, actual);
+  }
+
+  @Test
+  public void wholeDayEventBothAttend() {
+    // Have one mandatory attendee and one optional attendee with no events
+    //
+    // Events  : 
+    // Day     : |---------------------|
+    // Options : |---------------------|
+
+    MeetingRequest request = new MeetingRequest(Arrays.asList(PERSON_A), DURATION_60_MINUTES);
+    request.addOptionalAttendee(PERSON_B);
+
+    Collection<TimeRange> actual = query.query(NO_EVENTS, request);
+    Collection<TimeRange> expected = Arrays.asList(TimeRange.WHOLE_DAY);
+
+    Assert.assertEquals(expected, actual);
+  }
+
+  @Test
+  public void PersonAHasWholeDayEvent() {
+    // Have one mandatory attendee and one optional attendee with no events
+    //
+    // Events  : |--------A------------|
+    // Day     : |---------------------|
+    // Options : 
+    Collection<Event> events = Arrays.asList(
+      new Event("Event 1", TimeRange.WHOLE_DAY, Arrays.asList(PERSON_A)));
+    
+    MeetingRequest request = new MeetingRequest(Arrays.asList(PERSON_A), DURATION_60_MINUTES);
+    request.addOptionalAttendee(PERSON_B);
+
+    Collection<TimeRange> actual = query.query(events, request);
+    Collection<TimeRange> expected = Arrays.asList();
+
+    Assert.assertEquals(expected, actual);
+  }
+
+  @Test
+  public void EventEndsAfterEndOfDay() {
+    // Have one mandatory attendee with an event that ends after the end of day
+    //
+    // Events  :                |--A--------|
+    // Day     : |---------------------|
+    // Options : 
+    Collection<Event> events = Arrays.asList(
+      new Event("Event 1", TimeRange.fromStartDuration(TIME_1130PM, DURATION_90_MINUTES),
+        Arrays.asList(PERSON_A)));
+    
+    MeetingRequest request = new MeetingRequest(Arrays.asList(PERSON_A), DURATION_60_MINUTES);
+
+    Collection<TimeRange> actual = query.query(events, request);
+    Collection<TimeRange> expected = Arrays.asList(TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_1130PM, false));
+
+    Assert.assertEquals(expected, actual);
+  }
+
+  @Test
+  public void ExistingEventEndAt1130PM() {
+    // Have one mandatory attendee with an event that ends near end of day
+    //
+    // Events  : |------A---------|
+    // Day     : |---------------------|
+    // Options :                  
+    Collection<Event> events = Arrays.asList(
+      new Event("Event 1", TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_1130PM, false),
+        Arrays.asList(PERSON_A)));
+    
+    MeetingRequest request = new MeetingRequest(Arrays.asList(PERSON_A), DURATION_30_MINUTES);
+
+    Collection<TimeRange> actual = query.query(events, request);
+    Collection<TimeRange> expected = Arrays.asList(TimeRange.fromStartDuration(TIME_1130PM, DURATION_30_MINUTES));
 
     Assert.assertEquals(expected, actual);
   }

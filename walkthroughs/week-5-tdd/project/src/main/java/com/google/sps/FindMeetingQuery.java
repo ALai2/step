@@ -40,7 +40,7 @@ public final class FindMeetingQuery {
     Collections.sort(outOfRange, TimeRange.ORDER_BY_START);
 
     // iterate through and add timeranges to collection of available times
-    Collection<TimeRange> availableTimes = new ArrayList<>();
+    ArrayList<TimeRange> availableTimes = new ArrayList<>();
     
     int startPointer = TimeRange.START_OF_DAY;
     for (TimeRange eventTime: outOfRange) {
@@ -54,11 +54,49 @@ public final class FindMeetingQuery {
       }
     }
 
-    // check END_OF_DAY time slot
-    if (TimeRange.END_OF_DAY - startPointer >= request.getDuration()) {
+    // check END_OF_DAY time slot, need to include 23:59 so + 1
+    if (TimeRange.END_OF_DAY - startPointer + 1 >= request.getDuration()) {
       availableTimes.add(TimeRange.fromStartEnd(startPointer, TimeRange.END_OF_DAY, true));
     }
 
-    return availableTimes;
+    Collection<TimeRange> optionalTimesRequest = new ArrayList<>();
+    if (request.getOptionalAttendees().size() > 0) {
+      // get available times for optional attendees
+      MeetingRequest requestOptionalTimes = new MeetingRequest(request.getOptionalAttendees(), request.getDuration());
+      Collection<TimeRange> optionalTimes = query(events, requestOptionalTimes);
+
+      // find timeranges where available times for mandatory and optional attendees overlap
+      int j = 0;
+      for (TimeRange optionalTime: optionalTimes) {
+        for (int i = j; i < availableTimes.size(); i++) {
+          j = i;
+          TimeRange currentAvailableTime = availableTimes.get(i);
+
+          if (optionalTime.contains(currentAvailableTime)) {
+            optionalTimesRequest.add(currentAvailableTime);
+          } else if (currentAvailableTime.contains(optionalTime)) {
+            optionalTimesRequest.add(optionalTime);
+            break; // move on to next optional time
+          } else if (optionalTime.overlaps(currentAvailableTime)) {
+            if (optionalTime.start() - currentAvailableTime.end() >= request.getDuration()) {
+              optionalTimesRequest.add(TimeRange.fromStartEnd(optionalTime.start(), currentAvailableTime.end(), false));
+            } else if (currentAvailableTime.start() - optionalTime.end() >= request.getDuration()) {
+              optionalTimesRequest.add(TimeRange.fromStartEnd(currentAvailableTime.start(), optionalTime.end(), false));
+              break;
+            }
+          } else if (optionalTime.start() > currentAvailableTime.start()) {
+            break;
+          }
+        }
+      }
+    }
+    
+    // check which list of timeranges is to be returned
+    if (optionalTimesRequest.size() > 0 || (request.getAttendees().size() == 0 && request.getOptionalAttendees().size() > 0)) {
+      return optionalTimesRequest;
+    } else {
+      return availableTimes;
+    }
+
   }
 }
