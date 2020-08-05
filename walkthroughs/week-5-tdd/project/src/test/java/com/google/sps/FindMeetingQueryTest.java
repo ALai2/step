@@ -463,5 +463,24 @@ public final class FindMeetingQueryTest {
 
     Assert.assertEquals(expected, actual);
   }
+
+  @Test
+  public void ExistingEventEndAt1130PM() {
+    // Have one mandatory attendee with an event that ends near end of day
+    //
+    // Events  : |------A---------|
+    // Day     : |---------------------|
+    // Options :                  
+    Collection<Event> events = Arrays.asList(
+      new Event("Event 1", TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_1130PM, false),
+        Arrays.asList(PERSON_A)));
+    
+    MeetingRequest request = new MeetingRequest(Arrays.asList(PERSON_A), DURATION_30_MINUTES);
+
+    Collection<TimeRange> actual = query.query(events, request);
+    Collection<TimeRange> expected = Arrays.asList(TimeRange.fromStartDuration(TIME_1130PM, DURATION_30_MINUTES));
+
+    Assert.assertEquals(expected, actual);
+  }
 }
 

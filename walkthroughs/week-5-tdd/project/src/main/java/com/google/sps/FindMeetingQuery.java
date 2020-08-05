@@ -61,8 +61,8 @@ public final class FindMeetingQuery {
       }
     }
 
-    // check END_OF_DAY time slot
-    if (TimeRange.END_OF_DAY - startPointer >= request.getDuration()) {
+    // check END_OF_DAY time slot, need to include 23:59 so + 1
+    if (TimeRange.END_OF_DAY - startPointer + 1 >= request.getDuration()) {
       availableTimes.add(TimeRange.fromStartEnd(startPointer, TimeRange.END_OF_DAY, true));
     }
 
